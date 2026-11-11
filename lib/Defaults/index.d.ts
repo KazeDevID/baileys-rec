@@ -3,8 +3,8 @@ export const BIZ_BOT_SUPPORT_PAYLOAD: "{\"version\":1,\"is_ai_message\":true,\"s
 export const DEFAULT_ORIGIN: "https://web.whatsapp.com";
 export const CALL_VIDEO_PREFIX: "https://call.whatsapp.com/video/";
 export const CALL_AUDIO_PREFIX: "https://call.whatsapp.com/voice/";
-export const DONATE_URL: "https://saweria.co/itsliaaa";
-export const LIBRARY_NAME: "itsliaaa/baileys";
+export const DONATE_URL: "https://github.com/KazeDevID/baileys-rec";
+export const LIBRARY_NAME: "baileys-rec";
 export const TEXT_ENCODER: TextEncoder;
 export const TEXT_DECODER: TextDecoder;
 export const DEF_CALLBACK_PREFIX: "CB:";

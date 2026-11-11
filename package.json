@@ -1,7 +1,7 @@
 {
   "name": "baileys-rec",
   "type": "module",
-  "version": "7.0.1",
+  "version": "1.0.0",
   "description": "WhatsApp Web API library for Node.js with native flow interactive buttons, rich messages, and Meta WhatsApp Cloud API protocol adapter",
   "keywords": [
     "whatsapp",

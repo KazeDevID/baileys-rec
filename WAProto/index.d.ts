@@ -1,5 +1,5 @@
 /*
- * https://www.npmjs.com/package/@itsliaaa/baileys
+ * https://www.npmjs.com/package/baileys-rec
  * Type definitions adapted with lightweight types to match index.js
  */
 interface PBReader {
