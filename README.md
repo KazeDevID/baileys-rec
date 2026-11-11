@@ -1,7 +1,7 @@
-# 🚀 baileys-rec (v1.2.1)
+# 🚀 baileys-rec (v1.2.4)
 
 > **The Next-Generation WhatsApp Multi-Device & Meta Cloud API Library for Node.js.**  
-> Fork resmi dan disempurnakan dari Baileys dengan integrasi penuh protokol **Meta WhatsApp Business Cloud API**, dukungan tombol interaktif **Native Flow v2**, **Swipeable Multi-Card Carousel**, **Pairing Code**, serta optimasi memori dan auto-reconnect.
+> An official enhanced fork of Baileys featuring full protocol integration for **Meta WhatsApp Business Cloud API**, **Native Flow v2 Interactive Buttons**, **Swipeable Multi-Card Carousel**, **Pairing Code Authentication**, and robust memory optimization & auto-reconnect.
 
 [![npm version](https://img.shields.io/npm/v/baileys-rec.svg?style=flat-square&color=00d26a)](https://www.npmjs.com/package/baileys-rec)
 [![npm downloads](https://img.shields.io/npm/dm/baileys-rec.svg?style=flat-square&color=blue)](https://www.npmjs.com/package/baileys-rec)
@@ -11,126 +11,126 @@
 
 ---
 
-## 📑 Daftar Isi Lengkap
+## 📑 Comprehensive Table of Contents
 
-1. [Pengenalan & Arsitektur](#1-pengenalan--arsitektur)
-   - [Apa itu baileys-rec?](#apa-itu-baileys-rec)
-   - [Perbandingan: Baileys Socket vs Meta Cloud API](#perbandingan-baileys-socket-vs-meta-cloud-api)
-   - [Kelebihan baileys-rec v1.2.1](#kelebihan-baileys-rec-v121)
-2. [Persiapan & Instalasi dari Nol](#2-persiapan--instalasi-dari-nol)
-   - [Kebutuhan Sistem](#kebutuhan-sistem)
-   - [Inisialisasi Project (ESM & CommonJS)](#inisialisasi-project-esm--commonjs)
-   - [Instalasi Paket](#instalasi-paket)
-3. [Autentikasi & Koneksi WhatsApp](#3-autentikasi--koneksi-whatsapp)
-   - [Metode 1: Pairing Code (Tanpa Scan QR, Rekomendasi Server/VPS)](#metode-1-pairing-code-tanpa-scan-qr-rekomendasi-servervps)
-   - [Metode 2: QR Code Terminal](#metode-2-qr-code-terminal)
-   - [Auto-Reconnect & Penanganan Siklus Hidup Koneksi](#auto-reconnect--penanganan-siklus-hidup-koneksi)
-   - [Manajemen Session Auth Multi-File State](#manajemen-session-auth-multi-file-state)
-4. [Pengiriman Pesan Dasar (Core Messaging)](#4-pengiriman-pesan-dasar-core-messaging)
-   - [Pesan Teks & Format (Bold, Italic, Monospace)](#pesan-teks--format)
-   - [Mention Anggota (@mention)](#mention-anggota-mention)
-   - [Membalas Pesan (Quote / Reply)](#membalas-pesan-quote--reply)
-   - [Pesan Gambar & Foto](#pesan-gambar--foto)
-   - [Pesan Video & GIF](#pesan-video--gif)
-   - [Pesan Audio & Voice Note (VN / PTT)](#pesan-audio--voice-note-vn--ptt)
-   - [Pesan Dokumen & PDF](#pesan-dokumen--pdf)
-   - [Pesan Stiker (Biasa & Bergerak/Animated)](#pesan-stiker-biasa--bergerakanimated)
-   - [Pesan Lokasi & Maps](#pesan-lokasi--maps)
-   - [Pesan Kontak (vCard)](#pesan-kontak-vcard)
-   - [Pesan Polling / Voting](#pesan-polling--voting)
-   - [Pesan Reaksi Emoji](#pesan-reaksi-emoji)
-   - [Hapus Pesan untuk Semua Orang (Revoke / Delete)](#hapus-pesan-untuk-semua-orang-revoke--delete)
-   - [Edit Pesan Terkirim](#edit-pesan-terkirim)
-5. [Pesan Interaktif & Native Flow (Fitur Unggulan v1.2.1)](#5-pesan-interaktif--native-flow-fitur-unggulan-v121)
-   - [Tombol Quick Reply (Balas Cepat)](#tombol-quick-reply-balas-cepat)
-   - [Tombol CTA Link URL (Buka Web)](#tombol-cta-link-url-buka-web)
-   - [Tombol CTA Call (Panggil Nomor)](#tombol-cta-call-panggil-nomor)
-   - [Tombol CTA Copy Code (Salin Kode Promo)](#tombol-cta-copy-code-salin-kode-promo)
+1. [Introduction & Architecture](#1-introduction--architecture)
+   - [What is baileys-rec?](#what-is-baileys-rec)
+   - [Comparison: Baileys Socket vs Meta Cloud API](#comparison-baileys-socket-vs-meta-cloud-api)
+   - [Key Highlights of v1.2.4](#key-highlights-of-v124)
+2. [Setup & Installation from Scratch](#2-setup--installation-from-scratch)
+   - [System Requirements](#system-requirements)
+   - [Project Initialization (ESM & CommonJS)](#project-initialization-esm--commonjs)
+   - [Package Installation](#package-installation)
+3. [Authentication & WhatsApp Connection](#3-authentication--whatsapp-connection)
+   - [Method 1: Pairing Code (No QR Scan, Recommended for VPS/Cloud)](#method-1-pairing-code-no-qr-scan-recommended-for-vpscloud)
+   - [Method 2: Terminal QR Code](#method-2-terminal-qr-code)
+   - [Auto-Reconnect & Lifecycle Management](#auto-reconnect--lifecycle-management)
+   - [Multi-File Session State Management](#multi-file-session-state-management)
+4. [Core Messaging](#4-core-messaging)
+   - [Text Formatting (Bold, Italic, Monospace)](#text-formatting-bold-italic-monospace)
+   - [Mentions (@mention)](#mentions-mention)
+   - [Quoting / Replying to Messages](#quoting--replying-to-messages)
+   - [Images & Photos](#images--photos)
+   - [Videos & GIFs](#videos--gifs)
+   - [Audio & Voice Notes (VN / PTT)](#audio--voice-notes-vn--ptt)
+   - [Documents & PDFs](#documents--pdfs)
+   - [Stickers (Static & Animated)](#stickers-static--animated)
+   - [Location & Maps](#location--maps)
+   - [Contact Cards (vCard)](#contact-cards-vcard)
+   - [Polls & Voting](#polls--voting)
+   - [Emoji Reactions](#emoji-reactions)
+   - [Revoke / Delete for Everyone](#revoke--delete-for-everyone)
+   - [Editing Sent Messages](#editing-sent-messages)
+5. [Interactive Messages & Native Flow (v1.2.4 Flagship)](#5-interactive-messages--native-flow-v124-flagship)
+   - [Quick Reply Buttons](#quick-reply-buttons)
+   - [CTA URL Buttons (Open Web)](#cta-url-buttons-open-web)
+   - [CTA Call Buttons (Phone Call)](#cta-call-buttons-phone-call)
+   - [CTA Copy Code Buttons (Promo Copy)](#cta-copy-code-buttons-promo-copy)
    - [List Menu / Dropdown Single Select](#list-menu--dropdown-single-select)
    - [Swipeable Multi-Card Carousel](#swipeable-multi-card-carousel)
-   - [Mengapa Pesan Interaktif Pasti Tampil di v1.2.1?](#mengapa-pesan-interaktif-pasti-tampil-di-v121)
-6. [Integrasi Penuh Meta WhatsApp Cloud API](#6-integrasi-penuh-meta-whatsapp-cloud-api)
-   - [Kirim Skema Meta Cloud API via Socket: sock.sendCloudApi()](#kirim-skema-meta-cloud-api-via-socket-socksendcloudapi)
-   - [Klien HTTP Meta Cloud API Bawaan: createMetaCloudApiClient()](#klien-http-meta-cloud-api-bawaan-createmetacloudapiclient)
-   - [Bypass Jendela 24 Jam dengan Template Message](#bypass-jendela-24-jam-dengan-template-message)
-   - [Fungsi Utilitas: fromCloudApiMessage & toCloudApiMessage](#fungsi-utilitas-fromcloudapimessage--tocloudapimessage)
-   - [Membangun Webhook Receiver Resmi Meta Cloud API (Express)](#membangun-webhook-receiver-resmi-meta-cloud-api-express)
-7. [Event Handling & Listener Lengkap (Incoming Events)](#7-event-handling--listener-lengkap-incoming-events)
-   - [Mendengarkan Pesan Masuk (messages.upsert)](#mendengarkan-pesan-masuk-messagesupsert)
-   - [Menangkap Klik Tombol Interaktif & Native Flow](#menangkap-klik-tombol-interaktif--native-flow)
-   - [Menangkap Pilihan List Menu](#menangkap-pilihan-list-menu)
-   - [Menangkap Hasil Polling / Voting](#menangkap-hasil-polling--voting)
-   - [Mengunduh Media (Gambar, Video, Audio, Dokumen)](#mengunduh-media-gambar-video-audio-dokumen)
-   - [Update Status Centang (Centang 1, 2, Biru)](#update-status-centang-centang-1-2-biru)
-   - [Event Grup: Member Masuk, Keluar, Promote, Demote](#event-grup-member-masuk-keluar-promote-demote)
-8. [Manajemen Grup WhatsApp Lengkap (Group Admin)](#8-manajemen-grup-whatsapp-lengkap-group-admin)
-   - [Membuat Grup Baru](#membuat-grup-baru)
-   - [Mendapatkan Informasi Metadata Grup](#mendapatkan-informasi-metadata-grup)
-   - [Mengubah Nama & Deskripsi Grup](#mengubah-nama--deskripsi-grup)
-   - [Mengatur Izin Chat (Hanya Admin / Semua Anggota)](#mengatur-izin-chat-hanya-admin--semua-anggota)
-   - [Mengambil & Mereset Link Undangan Grup](#mengambil--mereset-link-undangan-grup)
-   - [Tambah, Kick, Promote, dan Demote Anggota](#tambah-kick-promote-dan-demote-anggota)
-   - [Keluar dari Grup](#keluar-dari-grup)
-9. [Profil, Kehadiran (Presence), & Privasi](#9-profil-kehadiran-presence--privasi)
-   - [Update Status Bio Teks](#update-status-bio-teks)
-   - [Update Foto Profil Akun atau Grup](#update-foto-profil-akun-atau-grup)
-   - [Kirim Status Sedang Mengetik / Merekam Suara](#kirim-status-sedang-mengetik--merekam-suara)
-   - [Menandai Pesan Sudah Dibaca (Read Receipt Centang Biru)](#menandai-pesan-sudah-dibaca-read-receipt-centang-biru)
-10. [Panduan Troubleshooting & Diagnosis Komprehensif](#10-panduan-troubleshooting--diagnosis-komprehensif)
-    - [Kenapa Pesan/Tombol Tidak Muncul di WhatsApp?](#kenapa-pesantombol-tidak-muncul-di-whatsapp)
-    - [Error Meta 131047: 24-Hour Customer Care Window](#error-meta-131047-24-hour-customer-care-window)
-    - [Error Meta 100: Invalid Parameter](#error-meta-100-invalid-parameter)
-    - [Session Rusak, 401 Unauthorized, & Bad MAC Session](#session-rusak-401-unauthorized--bad-mac-session)
-    - [Tips Menghindari Banned / Blokir Akun WhatsApp](#tips-menghindari-banned--blokir-akun-whatsapp)
-11. [Boilerplate Lengkap Bot Siap Pakai (Full Production Code)](#11-boilerplate-lengkap-bot-siap-pakai-full-production-code)
-12. [Daftar Referensi API (API Reference Table)](#12-daftar-referensi-api-api-reference-table)
+   - [Why Interactive Messages Guaranteed to Render in v1.2.4](#why-interactive-messages-guaranteed-to-render-in-v124)
+6. [Full Meta WhatsApp Cloud API Integration](#6-full-meta-whatsapp-cloud-api-integration)
+   - [Send Meta Cloud API Payload via Socket: sock.sendCloudApi()](#send-meta-cloud-api-payload-via-socket-socksendcloudapi)
+   - [Built-in Meta Cloud API HTTP Client: createMetaCloudApiClient()](#built-in-meta-cloud-api-http-client-createmetacloudapiclient)
+   - [Bypassing the 24-Hour Window with Template Messages](#bypassing-the-24-hour-window-with-template-messages)
+   - [Utility Helpers: fromCloudApiMessage & toCloudApiMessage](#utility-helpers-fromcloudapimessage--tocloudapimessage)
+   - [Building an Official Meta Cloud API Webhook Receiver (Express)](#building-an-official-meta-cloud-api-webhook-receiver-express)
+7. [Event Handling & Listeners (Incoming Events)](#7-event-handling--listeners-incoming-events)
+   - [Handling Incoming Messages (messages.upsert)](#handling-incoming-messages-messagesupsert)
+   - [Catching Interactive Button & Native Flow Clicks](#catching-interactive-button--native-flow-clicks)
+   - [Catching List Menu Selections](#catching-list-menu-selections)
+   - [Catching Poll Votes](#catching-poll-votes)
+   - [Downloading Media (Images, Videos, Audio, Documents)](#downloading-media-images-videos-audio-documents)
+   - [Delivery Receipt Updates (Single, Double, Blue Ticks)](#delivery-receipt-updates-single-double-blue-ticks)
+   - [Group Participant Events (Join, Leave, Promote, Demote)](#group-participant-events-join-leave-promote-demote)
+8. [Advanced WhatsApp Group Management](#8-advanced-whatsapp-group-management)
+   - [Creating a New Group](#creating-a-new-group)
+   - [Fetching Group Metadata](#fetching-group-metadata)
+   - [Updating Group Subject & Description](#updating-group-subject--description)
+   - [Configuring Chat Permissions (Announcements)](#configuring-chat-permissions-announcements)
+   - [Getting & Revoking Group Invite Links](#getting--revoking-group-invite-links)
+   - [Adding, Kicking, Promoting, and Demoting Members](#adding-kicking-promoting-and-demoting-members)
+   - [Leaving a Group](#leaving-group)
+9. [Profile, Presence, & Privacy](#9-profile-presence--privacy)
+   - [Updating Status Bio](#updating-status-bio)
+   - [Updating Profile Pictures (User or Group)](#updating-profile-pictures-user-or-group)
+   - [Sending Typing / Recording Presence Indicators](#sending-typing--recording-presence-indicators)
+   - [Marking Messages as Read (Blue Ticks)](#marking-messages-as-read-blue-ticks)
+10. [Comprehensive Troubleshooting & Diagnostics](#10-comprehensive-troubleshooting--diagnostics)
+    - [Why Are Messages/Buttons Not Showing in WhatsApp?](#why-are-messagesbuttons-not-showing-in-whatsapp)
+    - [Meta Error 131047: 24-Hour Customer Care Window](#meta-error-131047-24-hour-customer-care-window)
+    - [Meta Error 100: Invalid Parameter](#meta-error-100-invalid-parameter)
+    - [Corrupted Sessions, 401 Unauthorized, & Bad MAC](#corrupted-sessions-401-unauthorized--bad-mac)
+    - [Tips to Avoid WhatsApp Number Banning](#tips-to-avoid-whatsapp-number-banning)
+11. [Production-Ready Bot Boilerplate (Full Code)](#11-production-ready-bot-boilerplate-full-code)
+12. [API Reference Table](#12-api-reference-table)
 
 ---
 
-## 1. Pengenalan & Arsitektur
+## 1. Introduction & Architecture
 
-### Apa itu baileys-rec?
-`baileys-rec` adalah pustaka (library) WhatsApp generasi modern berbasis TypeScript/Node.js yang menggabungkan dua ekosistem terbesar:
-1. **Multi-Device WebSocket Protocol**: Terhubung langsung ke jaringan WhatsApp Web tanpa memerlukan emulator browser (Puppeteer/Playwright/Selenium), sangat ringan dalam konsumsi RAM (< 60MB).
-2. **Meta WhatsApp Business Cloud API Compatibility**: Mendukung skema payload resmi Meta Cloud API Graph v21.0, sehingga pengembang dapat menggunakan satu struktur kode yang sama untuk nomor bot Baileys maupun nomor resmi WhatsApp Cloud API.
+### What is baileys-rec?
+`baileys-rec` is a modern TypeScript/Node.js WhatsApp library that bridges two powerful ecosystems:
+1. **Multi-Device WebSocket Protocol**: Connects directly to the WhatsApp Web network without running a heavy headless browser (Puppeteer/Playwright), maintaining extremely low RAM consumption (< 60MB).
+2. **Meta WhatsApp Business Cloud API Compatibility**: Supports official Meta Cloud API Graph v21.0 payload schemas, allowing developers to write unified code that runs seamlessly on both Baileys socket sessions and official Meta Cloud API endpoints.
 
-### Perbandingan: Baileys Socket vs Meta Cloud API
+### Comparison: Baileys Socket vs Meta Cloud API
 
-| Fitur | Baileys Socket (`baileys-rec`) | Meta Cloud API Resmi | Solusi `baileys-rec` |
+| Feature | Baileys Socket (`baileys-rec`) | Official Meta Cloud API | `baileys-rec` Solution |
 | :--- | :--- | :--- | :--- |
-| **Biaya Pesan** | **Gratis 100%** (Menggunakan paket data nomor HP sendiri) | Berbayar per percakapan (Meta Rate Card) | Menggunakan format Meta Cloud API **secara gratis** via Socket |
-| **Jendela 24 Jam** | **Bebas Tanpa Batas** (Bisa chat user kapan saja) | Dibatasi jendela 24 jam (wajib Template Message) | Mengatasi blokir 24 jam dengan fallback otomatis |
-| **Tombol Interaktif** | Memerlukan struktur Protobuf & `viewOnceMessage` | Menggunakan JSON Payload (`type: "interactive"`) | **`sock.sendCloudApi()`** mengubah payload Meta langsung ke Protobuf |
-| **Swipeable Carousel** | Tersedia melalui properti `cards` | Tersedia melalui `interactive.type: "carousel"` | Mendukung **keduanya** secara native di v1.2.1 |
-| **Nomor HP** | Semua nomor WhatsApp pribadi / bisnis biasa | Wajib akun Meta Developer & Business Manager | Bisa menggunakan keduanya berdampingan |
+| **Message Cost** | **100% Free** (Uses your own phone data plan) | Pay-per-conversation (Meta Rate Card) | Use Meta Cloud API JSON structures **completely free** via Socket |
+| **24-Hour Window** | **Unlimited** (Initiate chats anytime) | Restricted to 24 hours (Template required) | Bypass 24h restrictions effortlessly |
+| **Interactive Buttons** | Requires complex Protobuf & `viewOnceMessage` | Standard JSON Payload (`type: "interactive"`) | **`sock.sendCloudApi()`** converts Meta JSON to Protobuf automatically |
+| **Swipeable Carousel** | Supported via `cards` property | Supported via `interactive.type: "carousel"` | Supports **both** natively in v1.2.4 |
+| **Phone Number** | Any personal or business WhatsApp number | Requires Meta Business verification & approval | Use either or both side-by-side |
 
-### Kelebihan baileys-rec v1.2.1
-- ✅ **Fix Pesan Interaktif**: Memperbaiki bug di mana tombol hilang dan hanya teks yang tampil di WhatsApp.
-- ✅ **Bungkus Otomatis `viewOnceMessage`**: Memastikan tombol selalu dirender pada WhatsApp Android, iOS, dan Desktop.
-- ✅ **Protobuf `messageVersion: 1`**: Memenuhi spesifikasi resmi WhatsApp Native Flow protocol.
-- ✅ **Stanza `<biz>` Otomatis**: Memastikan binary stanza bisnis WhatsApp disematkan ke setiap pesan tombol.
-- ✅ **Dukungan Pairing Code**: Menghubungkan nomor bot tanpa perlu scan QR kamera, ideal untuk server VPS/Docker/Cloud Run.
-- ✅ **Auto Fallback Tombol > 3**: Jika payload tombol melebihi batas 3 tombol Meta, otomatis dikonversi menjadi List Menu single-select untuk mencegah Error 100.
-- ✅ **Built-in Cloud API Client**: Dilengkapi HTTP Client langsung ke Meta Graph API v21.0 lengkap dengan error diagnostic engine.
+### Key Highlights of v1.2.4
+- ✅ **Interactive Message Bugfix**: Resolved parser priority issues where interactive buttons were stripped and converted into plain text.
+- ✅ **Automatic `viewOnceMessage` Envelope**: Ensures interactive messages render correctly on WhatsApp Android, iOS, and Desktop clients.
+- ✅ **Protobuf `messageVersion: 1`**: Fully compliant with WhatsApp Native Flow specifications.
+- ✅ **Automatic `<biz>` Binary Stanza**: Injected business stanzas for robust message delivery.
+- ✅ **Pairing Code Support**: Authenticate your bot without scanning terminal QR codes (ideal for headless VPS, Docker, and Cloud Run).
+- ✅ **Auto-Fallback for >3 Buttons**: Automatically converts quick reply lists exceeding 3 items into Single-Select List Menus to prevent Meta Error 100.
+- ✅ **Built-in Cloud API Client**: Direct REST communication with Meta Graph API v21.0 complete with automated error diagnostics.
 
 ---
 
-## 2. Persiapan & Instalasi dari Nol
+## 2. Setup & Installation from Scratch
 
-### Kebutuhan Sistem
-- **Node.js**: Versi `>= 18.0.0` (Disarankan Node.js 20.x atau 22.x LTS)
-- **NPM**: Versi `>= 9.0.0` atau Yarn / PNPM
-- **OS**: Linux (Ubuntu, Debian, CentOS), macOS, atau Windows 10/11
+### System Requirements
+- **Node.js**: Version `>= 18.0.0` (Node.js 20.x or 22.x LTS recommended)
+- **NPM**: Version `>= 9.0.0` or Yarn / PNPM
+- **OS**: Linux (Ubuntu, Debian, CentOS), macOS, or Windows 10/11
 
-### Inisialisasi Project (ESM & CommonJS)
+### Project Initialization (ESM & CommonJS)
 
-Buat folder proyek baru dan inisialisasi:
+Create a new project directory and initialize:
 ```bash
 mkdir whatsapp-bot && cd whatsapp-bot
 npm init -y
 ```
 
-Buka file `package.json` dan tambahkan `"type": "module"` agar Anda dapat menggunakan sintaks modern ES Module (`import/export`):
+Open `package.json` and add `"type": "module"` to enable modern ES Module syntax (`import/export`):
 ```json
 {
   "name": "whatsapp-bot",
@@ -144,31 +144,31 @@ Buka file `package.json` dan tambahkan `"type": "module"` agar Anda dapat menggu
 }
 ```
 
-> **Catatan untuk CommonJS**: Jika proyek Anda menggunakan CommonJS (`require`), Anda tidak perlu menambahkan `"type": "module"`. Contoh require:
+> **CommonJS Note**: If your project uses CommonJS (`require`), omit `"type": "module"`. Example require:
 > ```javascript
 > const makeWASocket = require('baileys-rec').default;
 > const { useMultiFileAuthState, DisconnectReason } = require('baileys-rec');
 > ```
 
-### Instalasi Paket
-Instal `baileys-rec` versi terbaru beserta logger `pino`:
+### Package Installation
+Install the latest version of `baileys-rec` along with `pino` logger:
 ```bash
 npm install baileys-rec@latest pino
 ```
 
-Jika ingin menggunakan scanner QR terminal dan penanganan error Boom:
+Optional tools for terminal QR scanning and error handling:
 ```bash
 npm install qrcode-terminal @hapi/boom
 ```
 
 ---
 
-## 3. Autentikasi & Koneksi WhatsApp
+## 3. Authentication & WhatsApp Connection
 
-### Metode 1: Pairing Code (Tanpa Scan QR, Rekomendasi Server/VPS)
-Metode **Pairing Code** adalah cara termudah dan paling stabil untuk menghubungkan bot WhatsApp di server VPS/Cloud tanpa perlu mengambil tangkapan layar terminal untuk scan QR.
+### Method 1: Pairing Code (No QR Scan, Recommended for VPS/Cloud)
+The **Pairing Code** method is the easiest and most stable way to link your WhatsApp bot on cloud servers without needing terminal screenshot tools.
 
-Buat file `index.js`:
+Create `index.js`:
 ```javascript
 import makeWASocket, {
   useMultiFileAuthState,
@@ -177,41 +177,40 @@ import makeWASocket, {
 import pino from 'pino';
 
 async function startBot() {
-  // 1. Inisialisasi penyimpanan sesi multi-file di folder 'auth_session'
+  // 1. Initialize multi-file auth state storage in './auth_session'
   const { state, saveCreds } = await useMultiFileAuthState('./auth_session');
 
-  // 2. Buat koneksi socket WhatsApp
+  // 2. Create the WhatsApp socket connection
   const sock = makeWASocket({
     auth: state,
-    logger: pino({ level: 'silent' }), // Ganti ke 'info' atau 'debug' jika ingin melihat log lengkap
-    printQRInTerminal: false, // Matikan QR terminal karena menggunakan pairing code
-    browser: ['Ubuntu', 'Chrome', '22.04'] // Identitas browser
+    logger: pino({ level: 'silent' }), // Set to 'info' or 'debug' for verbose logs
+    printQRInTerminal: false, // Disable QR since we use pairing code
+    browser: ['Ubuntu', 'Chrome', '22.04']
   });
 
-  // 3. Simpan credentials setiap kali ada pembaruan sesi
+  // 3. Save credentials upon updates
   sock.ev.on('creds.update', saveCreds);
 
-  // 4. Request pairing code jika nomor belum terdaftar / baru pertama kali login
+  // 4. Request pairing code if the session is not registered yet
   if (!sock.authState.creds.registered) {
-    // Masukkan nomor WhatsApp bot dengan kode negara tanpa simbol + atau spasi
-    // Contoh nomor Indonesia: 6281234567890
+    // Enter your bot WhatsApp number in E.164 format without + or spaces
+    // Example for Indonesia: 6281234567890
     const botNumber = '6281234567890';
     
-    // Minta kode pairing 8 digit ke server WhatsApp
     setTimeout(async () => {
       try {
         const code = await sock.requestPairingCode(botNumber);
         console.log('\n==================================================');
-        console.log('🔑 KODE PAIRING WHATSAPP ANDA: ', code);
-        console.log('👉 Buka WhatsApp di HP > Perangkat Tertaut > Tautkan dengan nomor telepon');
+        console.log('🔑 YOUR WHATSAPP PAIRING CODE: ', code);
+        console.log('👉 Open WhatsApp on your phone > Linked Devices > Link with phone number');
         console.log('==================================================\n');
       } catch (err) {
-        console.error('Gagal meminta pairing code:', err);
+        console.error('Failed to request pairing code:', err);
       }
     }, 3000);
   }
 
-  // 5. Tangani siklus hidup koneksi (connect, disconnect, reconnect)
+  // 5. Handle connection lifecycle
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update;
     
@@ -219,16 +218,16 @@ async function startBot() {
       const statusCode = lastDisconnect?.error?.output?.statusCode;
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
       
-      console.log(`⚠️ Koneksi terputus (status: ${statusCode}). Reconnecting: ${shouldReconnect}`);
+      console.log(`⚠️ Connection closed (status: ${statusCode}). Reconnecting: ${shouldReconnect}`);
       
       if (shouldReconnect) {
-        startBot(); // Auto reconnect otomatis
+        startBot();
       } else {
-        console.log('❌ Anda telah logout dari WhatsApp. Hapus folder auth_session dan jalankan ulang bot.');
+        console.log('❌ Logged out from WhatsApp. Delete auth_session folder and restart.');
       }
     } else if (connection === 'open') {
-      console.log('✅ BOT WHATSAPP BERHASIL TERHUBUNG!');
-      console.log('User ID bot:', sock.user?.id);
+      console.log('✅ WHATSAPP BOT CONNECTED SUCCESSFULLY!');
+      console.log('Bot User ID:', sock.user?.id);
     }
   });
 
@@ -238,8 +237,8 @@ async function startBot() {
 startBot();
 ```
 
-### Metode 2: QR Code Terminal
-Jika Anda menjalankan bot di komputer lokal dan ingin melakukan pemindaian kamera:
+### Method 2: Terminal QR Code
+For local development where you prefer scanning a QR code with your phone camera:
 ```javascript
 import makeWASocket, { useMultiFileAuthState, DisconnectReason } from 'baileys-rec';
 import pino from 'pino';
@@ -250,7 +249,7 @@ async function startBotQR() {
   const sock = makeWASocket({
     auth: state,
     logger: pino({ level: 'silent' }),
-    printQRInTerminal: true // Tampilkan QR Code ASCII di terminal
+    printQRInTerminal: true
   });
 
   sock.ev.on('creds.update', saveCreds);
@@ -261,7 +260,7 @@ async function startBotQR() {
         startBotQR();
       }
     } else if (connection === 'open') {
-      console.log('✅ Berhasil terhubung via QR Code!');
+      console.log('✅ Connected via QR Code!');
     }
   });
 }
@@ -269,25 +268,25 @@ async function startBotQR() {
 startBotQR();
 ```
 
-### Auto-Reconnect & Penanganan Siklus Hidup Koneksi
-Tabel alasan diskoneksi pada `DisconnectReason`:
+### Auto-Reconnect & Lifecycle Management
+Disconnect reasons reference table (`DisconnectReason`):
 
-| Status Code | Enum DisconnectReason | Arti | Solusi / Aksi |
+| Status Code | Enum DisconnectReason | Meaning | Action / Solution |
 | :--- | :--- | :--- | :--- |
-| **401** | `loggedOut` | Akun telah ditautkan keluar dari HP | Jangan reconnect. Hapus folder sesi dan scan/pair ulang. |
-| **408** | `timedOut` | Koneksi internet time out | Panggil fungsi `startBot()` untuk reconnect. |
-| **428** | `connectionLost` | Koneksi data terputus | Panggil fungsi `startBot()` untuk reconnect. |
-| **440** | `connectionReplaced` | Sesi dibuka di terminal/server lain | Tutup salah satu instance. |
-| **500** | `badSession` | File session auth korup | Hapus folder sesi dan pairing ulang. |
-| **515** | `restartRequired` | WhatsApp meminta restart handshake | Panggil fungsi `startBot()` secara langsung. |
+| **401** | `loggedOut` | Account logged out from phone | Do not reconnect. Delete session folder and re-pair. |
+| **408** | `timedOut` | Internet connection timed out | Invoke `startBot()` to reconnect. |
+| **428** | `connectionLost` | Network data dropped | Invoke `startBot()` to reconnect. |
+| **440** | `connectionReplaced` | Session opened on another device/terminal | Terminate conflicting instance. |
+| **500** | `badSession` | Auth session files corrupted | Delete session folder and re-pair. |
+| **515** | `restartRequired` | WhatsApp requested handshake restart | Invoke `startBot()` directly. |
 
-### Manajemen Session Auth Multi-File State
-`useMultiFileAuthState('./folder_session')` menyimpan token kredensial terpisah:
-- `creds.json`: Kunci enkripsi utama akun.
-- `app-state-sync-key-*.json`: Kunci sinkronisasi kontak dan obrolan.
-- `session-*.json`: Kunci sesi enkripsi sinyal per pengguna.
+### Multi-File Session State Management
+`useMultiFileAuthState('./folder_session')` stores persistent credentials:
+- `creds.json`: Primary account encryption keys.
+- `app-state-sync-key-*.json`: Contact and chat synchronization keys.
+- `session-*.json`: Signal encryption session keys per peer.
 
-> 💡 **Tips Performa**: Jangan pernah mengunggah folder sesi ke GitHub publik. Selalu masukkan folder sesi ke dalam `.gitignore`:
+> 💡 **Security Tip**: Never commit your session folders to public repositories. Add them to your `.gitignore`:
 > ```gitignore
 > auth_session/
 > auth_qr/
@@ -296,127 +295,127 @@ Tabel alasan diskoneksi pada `DisconnectReason`:
 
 ---
 
-## 4. Pengiriman Pesan Dasar (Core Messaging)
+## 4. Core Messaging
 
-Target pengiriman (`jid`) berupa:
-- Chat Pribadi: `"6281234567890@s.whatsapp.net"`
-- Grup WhatsApp: `"120363045678901234@g.us"`
-- Broadcast List: `"status@broadcast"`
+Target recipient (`jid`) formats:
+- Private Chat: `"6281234567890@s.whatsapp.net"`
+- Group Chat: `"120363045678901234@g.us"`
+- Broadcast: `"status@broadcast"`
 
-### Pesan Teks & Format
+### Text Formatting
 ```javascript
-// Format teks WhatsApp:
-// *teks* = Bold / Tebal
-// _teks_ = Italic / Miring
-// ~teks~ = Strikethrough / Coret
-// ```teks``` = Monospace / Font Kode
+// WhatsApp text formatting:
+// *text* = Bold
+// _text_ = Italic
+// ~text_ = Strikethrough
+// ```text``` = Monospace code
 
 await sock.sendMessage(jid, {
-  text: 'Halo! Ini adalah *pesan tebal*, _pesan miring_, ~pesan tercoret~, dan ```kode monospace```.'
+  text: 'Hello! This is *bold*, _italic_, ~strikethrough~, and ```monospace code```.'
 });
 ```
 
-### Mention Anggota (@mention)
+### Mentions (@mention)
 ```javascript
 const userJid = '6289876543210@s.whatsapp.net';
 
 await sock.sendMessage(jid, {
-  text: 'Halo @6289876543210, silakan cek pesan ini!',
+  text: 'Hello @6289876543210, please check this message!',
   mentions: [userJid]
 });
 ```
 
-### Membalas Pesan (Quote / Reply)
+### Quoting / Replying to Messages
 ```javascript
-// quoted: msg (objek pesan masuk dari messages.upsert)
+// quoted: incomingMessage (from messages.upsert)
 await sock.sendMessage(jid, {
-  text: 'Ini adalah balasan langsung untuk pesan Anda sebelumnya.'
+  text: 'This is a direct reply to your previous message.'
 }, { quoted: incomingMessage });
 ```
 
-### Pesan Gambar & Foto
-Mendukung Buffer biner, URL web langsung, maupun path file lokal:
+### Images & Photos
+Supports binary Buffers, direct URLs, or local file paths:
 ```javascript
 import fs from 'fs';
 
-// Dari URL
+// From URL
 await sock.sendMessage(jid, {
   image: { url: 'https://picsum.photos/800/600' },
-  caption: '📸 Gambar dari tautan internet'
+  caption: '📸 Image from web URL'
 });
 
-// Dari file lokal atau Buffer
-const imageBuffer = fs.readFileSync('./assets/foto.jpg');
+// From local file or Buffer
+const imageBuffer = fs.readFileSync('./assets/photo.jpg');
 await sock.sendMessage(jid, {
   image: imageBuffer,
-  caption: '📸 Gambar dari penyimpanan lokal'
+  caption: '📸 Image from local storage'
 });
 ```
 
-### Pesan Video & GIF
+### Videos & GIFs
 ```javascript
-// Video biasa dengan suara
+// Standard video with sound
 await sock.sendMessage(jid, {
   video: { url: 'https://example.com/video.mp4' },
-  caption: '🎥 Video demonstrasi'
+  caption: '🎥 Demonstration video'
 });
 
-// Video yang diputar otomatis berulang sebagai animasi GIF
+// Looping GIF animation
 await sock.sendMessage(jid, {
   video: { url: 'https://example.com/animation.mp4' },
-  caption: 'Animasi GIF',
+  caption: 'Looping GIF',
   gifPlayback: true
 });
 ```
 
-### Pesan Audio & Voice Note (VN / PTT)
+### Audio & Voice Notes (VN / PTT)
 ```javascript
-// Audio biasa (seperti file MP3 musik)
+// Standard audio file (e.g. MP3 music)
 await sock.sendMessage(jid, {
   audio: { url: 'https://example.com/music.mp3' },
   mimetype: 'audio/mp4',
   ptt: false
 });
 
-// Push-to-Talk (PTT) / Voice Note mikrofon hijau
+// Push-to-Talk (PTT) / Green microphone voice note
 await sock.sendMessage(jid, {
-  audio: fs.readFileSync('./assets/rekaman.ogg'),
+  audio: fs.readFileSync('./assets/voice.ogg'),
   mimetype: 'audio/ogg; codecs=opus',
   ptt: true
 });
 ```
 
-### Pesan Dokumen & PDF
+### Documents & PDFs
 ```javascript
 await sock.sendMessage(jid, {
   document: fs.readFileSync('./invoice.pdf'),
   mimetype: 'application/pdf',
-  fileName: 'Invoice_Pesanan_REC102.pdf',
-  caption: 'Lampiran invoice resmi Anda.'
+  fileName: 'Invoice_Order_REC102.pdf',
+  caption: 'Your official invoice attachment.'
 });
 ```
 
-### Pesan Stiker (Biasa & Bergerak/Animated)
+### Stickers (Static & Animated)
 ```javascript
-// Stiker harus berformat WebP
+// Sticker must be in WebP format
 await sock.sendMessage(jid, {
   sticker: fs.readFileSync('./sticker.webp')
 });
 ```
 
-### Pesan Lokasi & Maps
+### Location & Maps
 ```javascript
 await sock.sendMessage(jid, {
   location: {
     degreesLatitude: -6.2088,
     degreesLongitude: 106.8456,
-    name: 'Monumen Nasional (Monas)',
-    address: 'Gambir, Kota Jakarta Pusat, DKI Jakarta'
+    name: 'National Monument (Monas)',
+    address: 'Gambir, Central Jakarta, Indonesia'
   }
 });
 ```
 
-### Pesan Kontak (vCard)
+### Contact Cards (vCard)
 ```javascript
 const vcard = 
   'BEGIN:VCARD\n' +
@@ -436,70 +435,70 @@ await sock.sendMessage(jid, {
 });
 ```
 
-### Pesan Polling / Voting
+### Polls & Voting
 ```javascript
 await sock.sendMessage(jid, {
   poll: {
-    name: 'Berapa rating Anda untuk pembaruan baileys-rec v1.2.1?',
-    values: ['⭐⭐⭐⭐⭐ Luar Biasa', '⭐⭐⭐⭐ Sangat Bagus', '⭐⭐⭐ Cukup Baik'],
-    selectableCount: 1 // 1 untuk Single Choice, >1 untuk Multi Choice
+    name: 'How do you rate baileys-rec v1.2.4?',
+    values: ['⭐⭐⭐⭐⭐ Amazing', '⭐⭐⭐⭐ Very Good', '⭐⭐⭐ Good'],
+    selectableCount: 1 // 1 for Single Choice, >1 for Multi-Choice
   }
 });
 ```
 
-### Pesan Reaksi Emoji
+### Emoji Reactions
 ```javascript
-// Memberikan emoji reaction pada pesan tertentu
+// React to a specific message
 await sock.sendMessage(jid, {
   react: {
-    text: '🔥', // Kosongkan string '' untuk mencabut reaksi
+    text: '🔥', // Empty string '' to remove reaction
     key: incomingMessage.key
   }
 });
 ```
 
-### Hapus Pesan untuk Semua Orang (Revoke / Delete)
+### Revoke / Delete for Everyone
 ```javascript
-// Menghapus pesan bot yang sudah terkirim (Delete for Everyone)
+// Delete bot's sent message for all participants
 await sock.sendMessage(jid, {
   delete: sentMessageKey
 });
 ```
 
-### Edit Pesan Terkirim
+### Editing Sent Messages
 ```javascript
-// Mengubah isi teks pesan yang sudah terkirim sebelumnya
+// Edit previously sent text message content
 await sock.sendMessage(jid, {
   edit: sentMessageKey,
-  text: 'Ini adalah teks yang sudah diperbarui secara langsung.'
+  text: 'This message has been updated successfully.'
 });
 ```
 
 ---
 
-## 5. Pesan Interaktif & Native Flow (Fitur Unggulan v1.2.1)
+## 5. Interactive Messages & Native Flow (v1.2.4 Flagship)
 
-`baileys-rec` v1.2.1 telah disempurnakan sehingga seluruh tombol **Native Flow** dijamin tampil pada aplikasi WhatsApp resmi Android, iOS, maupun Web/Desktop.
+`baileys-rec` v1.2.4 guarantees that all **Native Flow** buttons render flawlessly on official WhatsApp Android, iOS, and Web/Desktop apps.
 
-### Tombol Quick Reply (Balas Cepat)
-Mengirim pesan dengan tombol balasan cepat (maksimal 3 tombol):
+### Quick Reply Buttons
+Send a message with quick reply buttons (maximum 3 buttons):
 ```javascript
 await sock.sendMessage(jid, {
-  text: 'Pesanan #REC-102 Anda telah selesai diproses.',
+  text: 'Order #REC-102 has been processed.',
   footer: 'baileys-rec Official',
   nativeFlowMessage: {
     buttons: [
       {
         name: 'quick_reply',
         buttonParamsJson: JSON.stringify({
-          display_text: '✅ Konfirmasi Terima',
+          display_text: '✅ Confirm Order',
           id: 'btn_confirm'
         })
       },
       {
         name: 'quick_reply',
         buttonParamsJson: JSON.stringify({
-          display_text: '❌ Batalkan Pesanan',
+          display_text: '❌ Cancel Order',
           id: 'btn_cancel'
         })
       }
@@ -508,18 +507,18 @@ await sock.sendMessage(jid, {
 });
 ```
 
-### Tombol CTA Link URL (Buka Web)
-Mengirim tombol yang langsung membuka browser saat ditekan:
+### CTA URL Buttons (Open Web)
+Send a button that opens an external web browser when clicked:
 ```javascript
 await sock.sendMessage(jid, {
-  text: 'Kunjungi repository resmi baileys-rec untuk melihat dokumentasi dan release notes:',
+  text: 'Visit the official baileys-rec repository for documentation and releases:',
   footer: 'KazeDevID Official',
   nativeFlowMessage: {
     buttons: [
       {
         name: 'cta_url',
         buttonParamsJson: JSON.stringify({
-          display_text: '🌐 Buka GitHub Repository',
+          display_text: '🌐 Open GitHub Repository',
           url: 'https://github.com/KazeDevID/baileys-rec',
           merchant_url: 'https://github.com/KazeDevID/baileys-rec'
         })
@@ -529,18 +528,18 @@ await sock.sendMessage(jid, {
 });
 ```
 
-### Tombol CTA Call (Panggil Nomor)
-Mengirim tombol yang langsung memanggil nomor telepon saat ditekan:
+### CTA Call Buttons (Phone Call)
+Send a button that initiates a phone call when tapped:
 ```javascript
 await sock.sendMessage(jid, {
-  text: 'Butuh bantuan darurat? Hubungi customer care kami:',
-  footer: 'Layanan 24 Jam',
+  text: 'Need emergency support? Call our customer care:',
+  footer: '24/7 Support',
   nativeFlowMessage: {
     buttons: [
       {
         name: 'cta_call',
         buttonParamsJson: JSON.stringify({
-          display_text: '📞 Hubungi CS Sekarang',
+          display_text: '📞 Call CS Now',
           phone_number: '+6281234567890'
         })
       }
@@ -549,18 +548,18 @@ await sock.sendMessage(jid, {
 });
 ```
 
-### Tombol CTA Copy Code (Salin Kode Promo)
-Mengirim tombol yang otomatis menyalin kode promo ke clipboard HP user:
+### CTA Copy Code Buttons (Promo Copy)
+Send a button that automatically copies a promo code to the user's clipboard:
 ```javascript
 await sock.sendMessage(jid, {
-  text: 'Selamat! Anda mendapatkan voucher diskon sebesar 50%:',
-  footer: 'Promo Terbatas',
+  text: 'Congratulations! You unlocked a 50% discount voucher:',
+  footer: 'Limited Promo',
   nativeFlowMessage: {
     buttons: [
       {
         name: 'cta_copy',
         buttonParamsJson: JSON.stringify({
-          display_text: '📋 Salin Kode Kupon',
+          display_text: '📋 Copy Coupon Code',
           copy_code: 'DISCOUNT50'
         })
       }
@@ -570,42 +569,42 @@ await sock.sendMessage(jid, {
 ```
 
 ### List Menu / Dropdown Single Select
-Mengirim menu daftar pilihan (bottom sheet) yang sangat rapi untuk menampilkan banyak opsi:
+Send a bottom-sheet dropdown menu to present multiple categorized options cleanly:
 ```javascript
 await sock.sendMessage(jid, {
-  text: 'Silakan pilih paket langganan yang Anda inginkan:',
-  footer: 'Tekan tombol di bawah untuk melihat pilihan',
+  text: 'Please select your desired subscription plan:',
+  footer: 'Tap below to open options',
   nativeFlowMessage: {
     buttons: [
       {
         name: 'single_select',
         buttonParamsJson: JSON.stringify({
-          title: '📋 Lihat Daftar Paket',
+          title: '📋 View Plans',
           sections: [
             {
-              title: 'Paket Hemat',
+              title: 'Starter Plans',
               rows: [
                 {
-                  header: 'Paket Basic',
-                  title: 'Langganan 1 Bulan',
-                  description: 'Akses seluruh fitur bot selama 30 hari',
+                  header: 'Basic Tier',
+                  title: '1 Month Access',
+                  description: 'Full bot features for 30 days',
                   id: 'pkg_basic'
                 },
                 {
-                  header: 'Paket Pro',
-                  title: 'Langganan 3 Bulan',
-                  description: 'Hemat 20% dengan akses prioritas',
+                  header: 'Pro Tier',
+                  title: '3 Months Access',
+                  description: 'Save 20% with priority support',
                   id: 'pkg_pro'
                 }
               ]
             },
             {
-              title: 'Paket Enterprise',
+              title: 'Enterprise Plans',
               rows: [
                 {
-                  header: 'Paket Unlimited',
-                  title: 'Langganan 1 Tahun',
-                  description: 'Dedicated support dan custom branding',
+                  header: 'Unlimited Tier',
+                  title: '1 Year Access',
+                  description: 'Dedicated support & custom branding',
                   id: 'pkg_unlimited'
                 }
               ]
@@ -619,25 +618,25 @@ await sock.sendMessage(jid, {
 ```
 
 ### Swipeable Multi-Card Carousel
-Fitur unggulan untuk menampilkan etalase produk atau kartu berita yang dapat digeser (swipe horizontal) langsung di WhatsApp:
+Present horizontally swipeable product catalogs or news cards directly in WhatsApp:
 ```javascript
 await sock.sendMessage(jid, {
-  text: 'Katalog Layanan & Produk Unggulan:',
+  text: 'Featured Services & Products:',
   cards: [
     {
       header: {
-        title: 'Paket Starter',
-        subtitle: 'Rp 99.000 / bln',
+        title: 'Starter Package',
+        subtitle: '$9 / mo',
         hasMediaAttachment: false
       },
-      body: { text: 'Sangat cocok untuk UMKM pemula yang ingin memulai bot WhatsApp.' },
-      footer: { text: 'Aktivasi Instan' },
+      body: { text: 'Perfect for beginners and small businesses starting with WhatsApp bots.' },
+      footer: { text: 'Instant Activation' },
       nativeFlowMessage: {
         buttons: [
           {
             name: 'quick_reply',
             buttonParamsJson: JSON.stringify({
-              display_text: 'Pilih Starter',
+              display_text: 'Buy Starter',
               id: 'select_starter'
             })
           }
@@ -646,18 +645,18 @@ await sock.sendMessage(jid, {
     },
     {
       header: {
-        title: 'Paket Enterprise',
-        subtitle: 'Rp 499.000 / bln',
+        title: 'Enterprise Package',
+        subtitle: '$49 / mo',
         hasMediaAttachment: false
       },
-      body: { text: 'Performa tinggi tanpa batas request dan didukung SLA 99.9%.' },
-      footer: { text: 'Free Konsultasi' },
+      body: { text: 'High performance, unlimited requests, and 99.9% SLA.' },
+      footer: { text: 'Free Setup' },
       nativeFlowMessage: {
         buttons: [
           {
             name: 'quick_reply',
             buttonParamsJson: JSON.stringify({
-              display_text: 'Pilih Enterprise',
+              display_text: 'Buy Enterprise',
               id: 'select_enterprise'
             })
           }
@@ -668,18 +667,18 @@ await sock.sendMessage(jid, {
 });
 ```
 
-### Mengapa Pesan Interaktif Pasti Tampil di v1.2.1?
-Di versi `1.2.1`, pustaka ini mengimplementasikan 3 lapisan proteksi otomatis:
-1. **Prioritas Parser**: Memindahkan evaluasi cabang `nativeFlow` dan `cards` sebelum cabang teks biasa sehingga pesan dengan `body.text` tidak lagi terpotong.
-2. **Standard Protobuf `messageVersion: 1`**: Seluruh tombol native flow otomatis disematkan atribut versi protokol v1 yang wajib bagi WhatsApp versi 2024-2026.
-3. **Envelope `viewOnceMessage`**: Otomatis membungkus struktur pesan interaktif dalam amplop `viewOnceMessage` (dengan flag non-ephemeral) dan stanza `<biz>` yang memicu engine WhatsApp mobile client merender tombol UI interaktif.
+### Why Interactive Messages Guaranteed to Render in v1.2.4
+Version `1.2.4` implements 3 automated safeguard layers:
+1. **Parser Priority**: Evaluates `nativeFlow` and `cards` branches before text branches so messages with `body.text` are never intercepted into extended text messages.
+2. **Standard Protobuf `messageVersion: 1`**: Automatically attaches protocol version 1 required by modern WhatsApp clients.
+3. **`viewOnceMessage` Envelope**: Automatically wraps interactive messages in `viewOnceMessage` with non-ephemeral flags and binary `<biz>` stanzas that trigger mobile UI rendering.
 
 ---
 
-## 6. Integrasi Penuh Meta WhatsApp Cloud API
+## 6. Full Meta WhatsApp Cloud API Integration
 
-### Kirim Skema Meta Cloud API via Socket: sock.sendCloudApi()
-Anda dapat menggunakan format payload JSON resmi dari dokumentasi Meta Developer, dan `baileys-rec` akan mengonversinya secara mulus ke pesan socket Baileys:
+### Send Meta Cloud API Payload via Socket: sock.sendCloudApi()
+Use official Meta Cloud API JSON payload structures directly in Baileys:
 
 ```javascript
 await sock.sendCloudApi(jid, {
@@ -691,10 +690,10 @@ await sock.sendCloudApi(jid, {
     type: 'button',
     header: {
       type: 'text',
-      text: 'Pemberitahuan Sistem'
+      text: 'System Notification'
     },
     body: {
-      text: 'Server backup harian telah selesai dengan sukses. Pilih tindakan selanjutnya:'
+      text: 'Daily server backup completed successfully. Choose next action:'
     },
     footer: {
       text: 'baileys-rec Cloud Adapter'
@@ -705,14 +704,14 @@ await sock.sendCloudApi(jid, {
           type: 'reply',
           reply: {
             id: 'action_view_log',
-            title: '📄 Lihat Log'
+            title: '📄 View Logs'
           }
         },
         {
           type: 'reply',
           reply: {
             id: 'action_ok',
-            title: '✅ Selesai'
+            title: '✅ Done'
           }
         }
       ]
@@ -721,65 +720,65 @@ await sock.sendCloudApi(jid, {
 });
 ```
 
-### Klien HTTP Meta Cloud API Bawaan: createMetaCloudApiClient()
-`baileys-rec` menyediakan klien HTTP resmi terintegrasi untuk berkomunikasi langsung dengan REST API Meta Graph v21.0:
+### Built-in Meta Cloud API HTTP Client: createMetaCloudApiClient()
+`baileys-rec` includes a native HTTP REST client communicating directly with Meta Graph API v21.0:
 
 ```javascript
 import { createMetaCloudApiClient } from 'baileys-rec';
 
 const client = createMetaCloudApiClient({
-  phoneNumberId: '104523985721834', // Phone Number ID dari Meta Developer Portal
-  accessToken: 'EAAG...',            // Permanent System User Token
-  apiVersion: 'v21.0'               // Versi Graph API Meta
+  phoneNumberId: '104523985721834', // Meta Developer Phone Number ID
+  accessToken: 'EAAG...',            // Permanent System User Access Token
+  apiVersion: 'v21.0'               // Graph API Version
 });
 
-// 1. Kirim pesan teks langsung via HTTP Meta
-await client.sendText('6281234567890', 'Halo dari Meta WhatsApp Cloud API!');
+// 1. Send plain text via Meta HTTP API
+await client.sendText('6281234567890', 'Hello from Meta WhatsApp Cloud API!');
 
-// 2. Kirim pesan tombol interaktif via HTTP Meta
+// 2. Send interactive buttons via Meta HTTP API
 await client.sendInteractive('6281234567890', {
   type: 'button',
-  body: { text: 'Pilih salah satu menu di bawah ini:' },
+  body: { text: 'Choose an option below:' },
   action: {
     buttons: [
-      { type: 'reply', reply: { id: 'opt_1', title: 'Layanan 1' } },
-      { type: 'reply', reply: { id: 'opt_2', title: 'Layanan 2' } }
+      { type: 'reply', reply: { id: 'opt_1', title: 'Option 1' } },
+      { type: 'reply', reply: { id: 'opt_2', title: 'Option 2' } }
     ]
   }
 });
 ```
 
-### Bypass Jendela 24 Jam dengan Template Message
-Aturan resmi Meta WhatsApp Business menyatakan: **Anda TIDAK BISA mengirim pesan bebas/interaktif kepada pengguna baru jika pengguna tersebut belum mengirim pesan ke nomor bisnis Anda dalam 24 jam terakhir (Error 131047)**.
+### Bypassing the 24-Hour Window with Template Messages
+Official Meta policy states: **You cannot send free-form messages or interactive buttons to users who haven't messaged your business number within the last 24 hours (Error 131047)**.
 
-Untuk membuka jendela 24 jam, Anda **wajib** mengirimkan pesan berbasis **Template** yang telah disetujui Meta:
+To open or reopen the 24-hour window, you **must** send an approved **Template Message**:
 ```javascript
-// Kirim template 'hello_world' resmi Meta untuk membuka jendela 24 jam
+// Send Meta's official 'hello_world' template to open the 24h window
 const response = await client.sendTemplate(
-  '6281234567890',  // Nomor tujuan format E.164
-  'hello_world',    // Nama template terdaftar di WhatsApp Business Manager
-  'en_US'           // Kode bahasa template
+  '6281234567890',  // E.164 phone number
+  'hello_world',    // Approved template name in Meta Business Manager
+  'en_US'           // Language code
 );
 
-console.log('Template terkirim! Message ID:', response.messages[0].id);
-// Setelah pengguna membalas pesan template ini, jendela 24 jam terbuka,
-// dan Anda dapat mengirim pesan interaktif bebas maupun tombol!
+console.log('Template sent! Message ID:', response.messages[0].id);
+// Once the user replies to this template, the 24-hour window opens
+// and you can freely send interactive buttons and free-form messages!
 ```
 
-### Fungsi Utilitas: fromCloudApiMessage & toCloudApiMessage
-Anda dapat mengonversi format payload secara manual:
+### Utility Helpers: fromCloudApiMessage & toCloudApiMessage
+Convert payloads manually:
 ```javascript
 import { fromCloudApiMessage, toCloudApiMessage } from 'baileys-rec';
 
-// 1. Ubah payload Meta Cloud API menjadi konten pesan Baileys
+// 1. Convert Meta Cloud API payload into Baileys message content
 const baileysContent = fromCloudApiMessage({
   type: 'interactive',
   interactive: {
     type: 'button',
-    body: { text: 'Klik tombol di bawah' },
+    body: { text: 'Tap below' },
     action: {
       buttons: [
-        { type: 'reply', reply: { id: 'btn_1', title: 'Pilihan 1' } }
+        { type: 'reply', reply: { id: 'btn_1', title: 'Choice 1' } }
       ]
     }
   }
@@ -787,15 +786,15 @@ const baileysContent = fromCloudApiMessage({
 
 await sock.sendMessage(jid, baileysContent);
 
-// 2. Ubah pesan Baileys kembali ke format Meta Cloud API
+// 2. Convert Baileys message back to Meta Cloud API payload
 const cloudPayload = toCloudApiMessage('6281234567890', {
-  text: 'Halo dari Baileys'
+  text: 'Hello from Baileys'
 });
 console.log(cloudPayload);
 ```
 
-### Membangun Webhook Receiver Resmi Meta Cloud API (Express)
-Berikut adalah contoh server Express untuk menerima event Webhook dari Meta Developer:
+### Building an Official Meta Cloud API Webhook Receiver (Express)
+Example Express server for receiving Meta Webhook events:
 ```javascript
 import express from 'express';
 
@@ -804,20 +803,20 @@ app.use(express.json());
 
 const VERIFY_TOKEN = 'MY_SECURE_VERIFY_TOKEN_123';
 
-// 1. Endpoint Verifikasi Webhook Meta (GET)
+// 1. Meta Webhook Verification (GET)
 app.get('/webhook', (req, res) => {
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
   const challenge = req.query['hub.challenge'];
 
   if (mode === 'subscribe' && token === VERIFY_TOKEN) {
-    console.log('✅ Webhook Meta berhasil diverifikasi!');
+    console.log('✅ Meta Webhook verified successfully!');
     return res.status(200).send(challenge);
   }
   return res.sendStatus(403);
 });
 
-// 2. Endpoint Menerima Event Pesan Masuk (POST)
+// 2. Incoming Webhook Event Receiver (POST)
 app.post('/webhook', (req, res) => {
   const body = req.body;
   
@@ -828,12 +827,12 @@ app.post('/webhook', (req, res) => {
         const messages = value.messages || [];
         
         for (const msg of messages) {
-          console.log(`📩 Pesan masuk dari ${msg.from}: `, msg);
+          console.log(`📩 Incoming message from ${msg.from}:`, msg);
           
           if (msg.type === 'interactive') {
             const btnId = msg.interactive?.button_reply?.id;
             const listId = msg.interactive?.list_reply?.id;
-            console.log('User menekan tombol:', btnId || listId);
+            console.log('User tapped button:', btnId || listId);
           }
         }
       }
@@ -843,26 +842,24 @@ app.post('/webhook', (req, res) => {
   return res.sendStatus(404);
 });
 
-app.listen(3000, () => console.log('🚀 Webhook Meta berjalan di port 3000'));
+app.listen(3000, () => console.log('🚀 Meta Webhook running on port 3000'));
 ```
 
 ---
 
-## 7. Event Handling & Listener Lengkap (Incoming Events)
+## 7. Event Handling & Listeners (Incoming Events)
 
-### Mendengarkan Pesan Masuk (messages.upsert)
+### Handling Incoming Messages (messages.upsert)
 ```javascript
 sock.ev.on('messages.upsert', async ({ messages, type }) => {
-  if (type !== 'notify') return; // Hanya tangkap pesan baru
+  if (type !== 'notify') return; // Capture new messages only
 
   for (const msg of messages) {
-    // 1. Abaikan pesan yang dikirim oleh bot itu sendiri
-    if (msg.key.fromMe) continue;
+    if (msg.key.fromMe) continue; // Ignore bot's own messages
 
     const fromJid = msg.key.remoteJid;
-    const senderName = msg.pushName || 'Pengguna';
+    const senderName = msg.pushName || 'User';
     
-    // 2. Ambil teks pesan dari berbagai jenis container
     const messageContent = msg.message;
     const text = 
       messageContent?.conversation ||
@@ -873,54 +870,43 @@ sock.ev.on('messages.upsert', async ({ messages, type }) => {
 
     console.log(`💬 [${senderName}] (${fromJid}): ${text}`);
 
-    // Respon command sederhana
     if (text.toLowerCase() === '!ping') {
-      await sock.sendMessage(fromJid, { text: '🏓 Pong! Bot aktif.' }, { quoted: msg });
+      await sock.sendMessage(fromJid, { text: '🏓 Pong! Bot is active.' }, { quoted: msg });
     }
   }
 });
 ```
 
-### Menangkap Klik Tombol Interaktif & Native Flow
-Saat pengguna menekan tombol **Quick Reply** atau tombol **Native Flow**, WhatsApp mengirimkan event balasan khusus:
+### Catching Interactive Button & Native Flow Clicks
 ```javascript
 sock.ev.on('messages.upsert', async ({ messages }) => {
   for (const msg of messages) {
     if (msg.key.fromMe) continue;
     const fromJid = msg.key.remoteJid;
 
-    // 1. Deteksi balasan Native Flow Buttons
+    // 1. Native Flow Buttons
     const interactive = msg.message?.interactiveResponseMessage;
     if (interactive?.nativeFlowResponseMessage?.paramsJson) {
       const params = JSON.parse(interactive.nativeFlowResponseMessage.paramsJson);
-      const buttonId = params.id;
-      console.log('🔘 User menekan Native Flow Button ID:', buttonId);
+      console.log('🔘 Native Flow Button ID:', params.id);
 
-      if (buttonId === 'btn_confirm') {
-        await sock.sendMessage(fromJid, { text: 'Terima kasih telah mengonfirmasi pesanan!' });
+      if (params.id === 'btn_confirm') {
+        await sock.sendMessage(fromJid, { text: 'Thank you for confirming your order!' });
       }
       continue;
     }
 
-    // 2. Deteksi balasan Quick Reply tradisional
+    // 2. Traditional Quick Reply
     const buttonReply = msg.message?.buttonsResponseMessage;
     if (buttonReply) {
-      console.log('🔘 User menekan Quick Reply ID:', buttonReply.selectedButtonId);
-      continue;
-    }
-
-    // 3. Deteksi balasan Template Button
-    const templateReply = msg.message?.templateButtonReplyMessage;
-    if (templateReply) {
-      console.log('🔘 User menekan Template Reply ID:', templateReply.selectedId);
+      console.log('🔘 Quick Reply ID:', buttonReply.selectedButtonId);
       continue;
     }
   }
 });
 ```
 
-### Menangkap Pilihan List Menu
-Saat pengguna memilih salah satu item dari dropdown **List Menu**:
+### Catching List Menu Selections
 ```javascript
 sock.ev.on('messages.upsert', async ({ messages }) => {
   for (const msg of messages) {
@@ -930,31 +916,29 @@ sock.ev.on('messages.upsert', async ({ messages }) => {
     const listReply = msg.message?.listResponseMessage;
     if (listReply) {
       const selectedId = listReply.singleSelectReply?.selectedRowId;
-      const title = listReply.title;
-      console.log(`📋 User memilih menu: ID=${selectedId}, Title=${title}`);
+      console.log(`📋 Selected List Row ID: ${selectedId}`);
 
       if (selectedId === 'pkg_basic') {
-        await sock.sendMessage(fromJid, { text: 'Anda telah memilih Paket Basic.' });
+        await sock.sendMessage(fromJid, { text: 'You selected the Basic Plan.' });
       }
     }
   }
 });
 ```
 
-### Menangkap Hasil Polling / Voting
+### Catching Poll Votes
 ```javascript
 sock.ev.on('messages.upsert', async ({ messages }) => {
   for (const msg of messages) {
     const pollUpdate = msg.message?.pollUpdateMessage;
     if (pollUpdate) {
-      console.log('🗳️ Ada suara baru masuk pada polling!');
-      console.log('Kunci polling:', pollUpdate.pollCreationMessageKey);
+      console.log('🗳️ New poll vote received!');
     }
   }
 });
 ```
 
-### Mengunduh Media (Gambar, Video, Audio, Dokumen)
+### Downloading Media
 ```javascript
 import { downloadMediaMessage } from 'baileys-rec';
 import fs from 'fs';
@@ -963,15 +947,15 @@ sock.ev.on('messages.upsert', async ({ messages }) => {
   for (const msg of messages) {
     if (msg.key.fromMe) continue;
 
-    const isImage = Boolean(msg.message?.imageMessage);
-    const isVideo = Boolean(msg.message?.videoMessage);
-    const isAudio = Boolean(msg.message?.audioMessage);
-    const isDoc = Boolean(msg.message?.documentMessage);
+    const isMedia = Boolean(
+      msg.message?.imageMessage ||
+      msg.message?.videoMessage ||
+      msg.message?.audioMessage ||
+      msg.message?.documentMessage
+    );
 
-    if (isImage || isVideo || isAudio || isDoc) {
-      console.log('📥 Sedang mengunduh media dari pengguna...');
-      
-      // Unduh media ke Buffer memori
+    if (isMedia) {
+      console.log('📥 Downloading incoming media...');
       const buffer = await downloadMediaMessage(
         msg,
         'buffer',
@@ -982,58 +966,31 @@ sock.ev.on('messages.upsert', async ({ messages }) => {
         }
       );
 
-      // Simpan file hasil download ke disk lokal
-      const filename = isImage ? 'download.jpg' : isVideo ? 'download.mp4' : 'download.bin';
-      fs.writeFileSync(`./downloads/${filename}`, buffer);
-      console.log(`✅ Media berhasil disimpan ke ./downloads/${filename}`);
+      fs.writeFileSync('./downloads/media_file', buffer);
+      console.log('✅ Media saved successfully!');
     }
   }
 });
 ```
 
-### Update Status Centang (Centang 1, 2, Biru)
+### Delivery Receipt Updates (Ticks)
 ```javascript
 sock.ev.on('messages.update', (updates) => {
   for (const update of updates) {
-    // Status delivery:
-    // 2 = PENDING (Menunggu)
-    // 3 = SERVER_ACK (Centang 1 / Sampai di server)
-    // 4 = DELIVERY_ACK (Centang 2 abu-abu / Diterima di HP)
-    // 5 = READ (Centang 2 biru / Telah dibaca)
-    // 6 = PLAYED (Voice note telah didengarkan)
-    console.log(`Status pesan ${update.key.id}: status=${update.update?.status}`);
+    // Status codes: 2=PENDING, 3=SERVER_ACK, 4=DELIVERY_ACK, 5=READ, 6=PLAYED
+    console.log(`Message ${update.key.id} status update: ${update.update?.status}`);
   }
 });
 ```
 
-### Event Grup: Member Masuk, Keluar, Promote, Demote
+### Group Participant Events (Join, Leave, Promote, Demote)
 ```javascript
 sock.ev.on('group-participants.update', async ({ id, participants, action }) => {
-  // id: ID grup WhatsApp
-  // participants: Array JID pengguna
-  // action: 'add' | 'remove' | 'promote' | 'demote'
-  
-  const targetUser = participants[0];
-
+  const target = participants[0];
   if (action === 'add') {
     await sock.sendMessage(id, {
-      text: `Selamat datang @${targetUser.split('@')[0]} di grup kami!`,
-      mentions: [targetUser]
-    });
-  } else if (action === 'remove') {
-    await sock.sendMessage(id, {
-      text: `Selamat tinggal @${targetUser.split('@')[0]}.`,
-      mentions: [targetUser]
-    });
-  } else if (action === 'promote') {
-    await sock.sendMessage(id, {
-      text: `Selamat! @${targetUser.split('@')[0]} sekarang adalah admin grup.`,
-      mentions: [targetUser]
-    });
-  } else if (action === 'demote') {
-    await sock.sendMessage(id, {
-      text: `@${targetUser.split('@')[0]} tidak lagi menjadi admin grup.`,
-      mentions: [targetUser]
+      text: `Welcome @${target.split('@')[0]} to the group!`,
+      mentions: [target]
     });
   }
 });
@@ -1041,165 +998,121 @@ sock.ev.on('group-participants.update', async ({ id, participants, action }) => 
 
 ---
 
-## 8. Manajemen Grup WhatsApp Lengkap (Group Admin)
+## 8. Advanced WhatsApp Group Management
 
-### Membuat Grup Baru
+### Creating a New Group
 ```javascript
-const group = await sock.groupCreate('Grup Komunitas Bot', [
+const group = await sock.groupCreate('Community Bot Group', [
   '6281234567890@s.whatsapp.net',
   '6289876543210@s.whatsapp.net'
 ]);
-console.log('✅ Grup berhasil dibuat! JID:', group.id);
+console.log('✅ Group created! JID:', group.id);
 ```
 
-### Mendapatkan Informasi Metadata Grup
+### Fetching Group Metadata
 ```javascript
-const groupMetadata = await sock.groupMetadata(groupJid);
-console.log('Nama Grup:', groupMetadata.subject);
-console.log('Deskripsi:', groupMetadata.desc);
-console.log('Jumlah Anggota:', groupMetadata.participants.length);
-console.log('Daftar Admin:', groupMetadata.participants.filter(p => p.admin).map(p => p.id));
+const metadata = await sock.groupMetadata(groupJid);
+console.log('Group Name:', metadata.subject);
+console.log('Participants:', metadata.participants.length);
 ```
 
-### Mengubah Nama & Deskripsi Grup
+### Updating Group Subject & Description
 ```javascript
-// Ganti nama subjek grup
-await sock.groupUpdateSubject(groupJid, 'Nama Grup Baru 2026');
-
-// Ganti deskripsi grup
-await sock.groupUpdateDescription(groupJid, 'Aturan baru: Dilarang spam dan promosi!');
+await sock.groupUpdateSubject(groupJid, 'New Group Name 2026');
+await sock.groupUpdateDescription(groupJid, 'New rule: No spam allowed!');
 ```
 
-### Mengatur Izin Chat (Hanya Admin / Semua Anggota)
+### Configuring Chat Permissions (Announcements)
 ```javascript
-// Hanya admin yang boleh mengirim pesan ke grup (Tutup grup)
+// Admins only can message
 await sock.groupSettingUpdate(groupJid, 'announcement');
-
-// Semua anggota boleh mengirim pesan ke grup (Buka grup)
+// Everyone can message
 await sock.groupSettingUpdate(groupJid, 'not_announcement');
-
-// Kunci info grup agar hanya admin yang bisa edit nama/foto grup
-await sock.groupSettingUpdate(groupJid, 'locked');
-
-// Buka info grup agar semua member bisa edit
-await sock.groupSettingUpdate(groupJid, 'unlocked');
 ```
 
-### Mengambil & Mereset Link Undangan Grup
+### Getting & Revoking Group Invite Links
 ```javascript
-// Ambil kode link undangan grup
-const inviteCode = await sock.groupInviteCode(groupJid);
-console.log(`🔗 Tautan Grup: https://chat.whatsapp.com/${inviteCode}`);
+const code = await sock.groupInviteCode(groupJid);
+console.log(`🔗 Invite Link: https://chat.whatsapp.com/${code}`);
 
-// Cabut / reset tautan undangan lama dan buat tautan baru
-const newInviteCode = await sock.groupRevokeInvite(groupJid);
-console.log(`🔗 Tautan Baru: https://chat.whatsapp.com/${newInviteCode}`);
+// Revoke and generate new link
+await sock.groupRevokeInvite(groupJid);
 ```
 
-### Tambah, Kick, Promote, dan Demote Anggota
+### Adding, Kicking, Promoting, and Demoting Members
 ```javascript
 const user = '6289876543210@s.whatsapp.net';
-
-// 1. Tambah anggota ke grup
 await sock.groupParticipantsUpdate(groupJid, [user], 'add');
-
-// 2. Keluarkan / Kick anggota dari grup
 await sock.groupParticipantsUpdate(groupJid, [user], 'remove');
-
-// 3. Jadikan anggota sebagai Admin
 await sock.groupParticipantsUpdate(groupJid, [user], 'promote');
-
-// 4. Turunkan Admin menjadi anggota biasa
 await sock.groupParticipantsUpdate(groupJid, [user], 'demote');
 ```
 
-### Keluar dari Grup
+### Leaving a Group
 ```javascript
 await sock.groupLeave(groupJid);
-console.log('✅ Bot telah keluar dari grup.');
 ```
 
 ---
 
-## 9. Profil, Kehadiran (Presence), & Privasi
+## 9. Profile, Presence, & Privacy
 
-### Update Status Bio Teks
+### Updating Status Bio
 ```javascript
-await sock.updateProfileStatus('Online 24/7 | Powered by baileys-rec v1.2.1');
+await sock.updateProfileStatus('Online 24/7 | Powered by baileys-rec v1.2.4');
 ```
 
-### Update Foto Profil Akun atau Grup
+### Updating Profile Pictures
 ```javascript
-// Ganti foto profil bot sendiri
 await sock.updateProfilePicture(sock.user.id, { url: 'https://example.com/avatar.jpg' });
-
-// Ganti foto profil grup
-await sock.updateProfilePicture(groupJid, { url: 'https://example.com/group-logo.jpg' });
 ```
 
-### Kirim Status Sedang Mengetik / Merekam Suara
-Memberikan efek natural agar penerima melihat indikator "sedang mengetik..." atau "sedang merekam audio...":
+### Sending Typing / Recording Presence Indicators
 ```javascript
-// 1. Kirim status sedang mengetik
-await sock.sendPresenceUpdate('composing', jid);
-
-// 2. Kirim status sedang merekam audio
-await sock.sendPresenceUpdate('recording', jid);
-
-// 3. Hentikan status mengetik / idle
-await sock.sendPresenceUpdate('paused', jid);
-
-// 4. Update status bot online
-await sock.sendPresenceUpdate('available');
+await sock.sendPresenceUpdate('composing', jid); // Typing...
+await sock.sendPresenceUpdate('recording', jid); // Recording audio...
+await sock.sendPresenceUpdate('paused', jid);    // Idle
 ```
 
-### Menandai Pesan Sudah Dibaca (Read Receipt Centang Biru)
+### Marking Messages as Read (Blue Ticks)
 ```javascript
-// Kirim centang dua biru bahwa bot sudah membaca pesan tersebut
 await sock.readMessages([incomingMessage.key]);
 ```
 
 ---
 
-## 10. Panduan Troubleshooting & Diagnosis Komprehensif
+## 10. Comprehensive Troubleshooting & Diagnostics
 
-### Kenapa Pesan/Tombol Tidak Muncul di WhatsApp?
-| Penyebab | Penjelasan Mendalam | Solusi di baileys-rec v1.2.1 |
+### Why Are Messages/Buttons Not Showing in WhatsApp?
+| Cause | Deep Explanation | v1.2.4 Solution |
 | :--- | :--- | :--- |
-| **Urutan Switch Parser** | Jika payload memiliki teks dan tombol, parser lama mengira itu `extendedTextMessage` dan memotong tombol. | **Diperbaiki**: Cabang `nativeFlow` dievaluasi paling awal. |
-| **Protobuf MessageVersion** | WhatsApp menolak render tombol native flow tanpa flag `messageVersion: 1`. | **Diperbaiki**: Atribut `messageVersion: 1` otomatis disisipkan. |
-| **Bungkus ViewOnce** | WhatsApp Android & iOS mengabaikan tombol interaktif jika tidak berada dalam amplop `viewOnceMessage`. | **Diperbaiki**: Otomatis dibungkus ke dalam envelope `viewOnceMessage`. |
-| **Stanza Binary `<biz>`** | Server WhatsApp memerlukan binary node tag `<biz>` untuk pesan bisnis. | **Diperbaiki**: `shouldIncludeBizBinaryNode` otomatis di-unwrap. |
+| **Parser Switch Order** | Old parsers intercepted messages with `body.text` into extended text messages, stripping buttons. | **Fixed**: `nativeFlow` evaluated before text branches. |
+| **Protobuf MessageVersion** | WhatsApp clients discard native flow buttons lacking `messageVersion: 1`. | **Fixed**: `messageVersion: 1` automatically injected. |
+| **ViewOnce Envelope** | Mobile clients require interactive messages wrapped inside `viewOnceMessage`. | **Fixed**: Automatic `viewOnceMessage` wrapping applied. |
+| **Biz Binary Stanza** | WhatsApp requires `<biz>` binary stanzas for business features. | **Fixed**: `shouldIncludeBizBinaryNode` unwrapped cleanly. |
 
-### Error Meta 131047: 24-Hour Customer Care Window
-- **Penyebab**: Anda mencoba mengirim pesan interaktif atau teks biasa ke nomor yang belum mengirim pesan ke WhatsApp bisnis Anda dalam 24 jam terakhir.
-- **Solusi**: Kirim pesan menggunakan **Template Message** resmi yang telah diapprove Meta via `client.sendTemplate()`. Begitu user membalas, Anda bebas mengirim pesan interaktif.
+### Meta Error 131047: 24-Hour Customer Care Window
+- **Cause**: Trying to send free-form interactive messages to users who haven't messaged your business in over 24 hours.
+- **Solution**: Send an approved Meta **Template Message** via `client.sendTemplate()` to reopen the 24-hour window.
 
-### Error Meta 100: Invalid Parameter
-- **Penyebab**:
-  1. Nomor telepon memiliki tanda `+` atau spasi (contoh salah: `+62 812-3456`).
-  2. Jumlah tombol quick reply lebih dari 3 tombol.
-- **Solusi di v1.2.1**: `baileys-rec` otomatis membersihkan format nomor ke E.164 (hanya angka: `6281234567890`) dan mengonversi tombol ke list menu jika jumlahnya lebih dari 3.
+### Meta Error 100: Invalid Parameter
+- **Cause**: Phone numbers including `+` or spaces, or quick reply buttons exceeding the limit of 3.
+- **Solution in v1.2.4**: `baileys-rec` automatically sanitizes phone numbers into E.164 format and converts quick replies exceeding 3 items into a List Menu automatically.
 
-### Session Rusak, 401 Unauthorized, & Bad MAC Session
-- **Penyebab**: Kunci enkripsi sinyal tidak sinkron karena bot dimatikan mendadak saat sedang menulis kunci sesi atau token ditautkan keluar dari HP.
-- **Solusi**: Hapus seluruh isi folder `auth_session/`, lalu jalankan bot kembali untuk mendapatkan Pairing Code baru.
+### Corrupted Sessions, 401 Unauthorized, & Bad MAC
+- **Cause**: Signal encryption keys out of sync due to abrupt bot termination.
+- **Solution**: Delete the `auth_session/` folder and restart the bot to generate a fresh pairing code.
 
-### Tips Menghindari Banned / Blokir Akun WhatsApp
-1. **Gunakan Jeda (Delay)**: Jangan mengirim lebih dari 10 pesan dalam 1 detik secara terus-menerus. Gunakan jeda acak 1.5 - 3 detik:
-   ```javascript
-   const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-   await delay(2000);
-   ```
-2. **Kirim Kehadiran (Presence)**: Selalu kirim `sock.sendPresenceUpdate('composing', jid)` 1-2 detik sebelum mengirim pesan agar perilaku bot menyerupai manusia.
-3. **Gunakan Nomor yang Sudah Terverifikasi**: Jangan gunakan nomor baru yang belum pernah memiliki riwayat chat untuk melakukan broadcast massal.
-4. **Berikan Tombol Unsubscribe**: Sediakan opsi bagi penerima untuk berhenti berlangganan agar nomor bot Anda tidak dilaporkan (Report/Spam) oleh user.
+### Tips to Avoid WhatsApp Number Banning
+1. **Use Delays**: Avoid sending more than 10 messages per second. Add random 1.5 - 3 second delays between broadcast messages.
+2. **Send Presence**: Trigger `sock.sendPresenceUpdate('composing', jid)` before messaging to simulate human behavior.
+3. **Verified Numbers**: Avoid using brand-new unregistered numbers for heavy outbound messaging.
 
 ---
 
-## 11. Boilerplate Lengkap Bot Siap Pakai (Full Production Code)
+## 11. Production-Ready Bot Boilerplate (Full Code)
 
-Simpan kode di bawah ini sebagai `bot.js` dan jalankan dengan `node bot.js`:
+Save as `bot.js` and run with `node bot.js`:
 
 ```javascript
 import makeWASocket, {
@@ -1208,7 +1121,7 @@ import makeWASocket, {
 } from 'baileys-rec';
 import pino from 'pino';
 
-const BOT_PHONE_NUMBER = '6281234567890'; // Ganti dengan nomor WhatsApp Bot Anda
+const BOT_PHONE_NUMBER = '6281234567890';
 
 async function startProductionBot() {
   const { state, saveCreds } = await useMultiFileAuthState('./auth_prod');
@@ -1222,114 +1135,69 @@ async function startProductionBot() {
 
   sock.ev.on('creds.update', saveCreds);
 
-  // Minta pairing code jika belum login
   if (!sock.authState.creds.registered) {
     setTimeout(async () => {
       try {
         const code = await sock.requestPairingCode(BOT_PHONE_NUMBER);
-        console.log('🔑 KODE PAIRING WHATSAPP:', code);
+        console.log('🔑 WHATSAPP PAIRING CODE:', code);
       } catch (err) {
-        console.error('Gagal meminta kode pairing:', err);
+        console.error('Failed to request pairing code:', err);
       }
     }, 3000);
   }
 
-  // Handler siklus hidup koneksi
   sock.ev.on('connection.update', (update) => {
     const { connection, lastDisconnect } = update;
     if (connection === 'close') {
-      const statusCode = lastDisconnect?.error?.output?.statusCode;
-      if (statusCode !== DisconnectReason.loggedOut) {
-        console.log('🔄 Reconnecting ke WhatsApp...');
+      if (lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut) {
         startProductionBot();
-      } else {
-        console.log('❌ Sesi telah logout. Silakan pairing ulang.');
       }
     } else if (connection === 'open') {
-      console.log('🚀 BOT SIAP DIGUNAKAN!');
+      console.log('🚀 BOT READY FOR PRODUCTION!');
     }
   });
 
-  // Handler pesan masuk
   sock.ev.on('messages.upsert', async ({ messages, type }) => {
     if (type !== 'notify') return;
 
     for (const msg of messages) {
       if (msg.key.fromMe) continue;
-
       const remoteJid = msg.key.remoteJid;
-      const pushName = msg.pushName || 'Kawan';
+      const pushName = msg.pushName || 'User';
 
-      // 1. Ekstrak teks pesan
       const body = (
         msg.message?.conversation ||
         msg.message?.extendedTextMessage?.text ||
         ''
       ).trim();
 
-      // 2. Deteksi klik tombol interaktif
+      // Handle interactive button clicks
       const interactiveReply = msg.message?.interactiveResponseMessage;
       if (interactiveReply?.nativeFlowResponseMessage?.paramsJson) {
         const button = JSON.parse(interactiveReply.nativeFlowResponseMessage.paramsJson);
-        console.log('User menekan tombol:', button.id);
-
         if (button.id === 'btn_help') {
-          await sock.sendMessage(remoteJid, {
-            text: 'Berikut panduan bot:\n1. !menu - Buka daftar menu\n2. !info - Info sistem\n3. !carousel - Coba swipe cards'
-          });
-        } else if (button.id === 'btn_status') {
-          await sock.sendMessage(remoteJid, {
-            text: '🟢 Semua sistem server normal dan beroperasi.'
-          });
+          await sock.sendMessage(remoteJid, { text: 'Commands:\n1. !menu - Open main menu\n2. !carousel - Try swipe cards' });
         }
         continue;
       }
 
-      // 3. Perintah !menu dengan format Meta Cloud API via Socket
       if (body.toLowerCase() === '!menu') {
-        // Simulasi sedang mengetik
         await sock.sendPresenceUpdate('composing', remoteJid);
-
         await sock.sendCloudApi(remoteJid, {
           messaging_product: 'whatsapp',
           type: 'interactive',
           interactive: {
             type: 'button',
-            header: { type: 'text', text: `Halo ${pushName}!` },
-            body: { text: 'Selamat datang di layanan bot baileys-rec v1.2.1. Silakan pilih opsi di bawah:' },
+            header: { type: 'text', text: `Hello ${pushName}!` },
+            body: { text: 'Welcome to baileys-rec v1.2.4 bot. Choose an option below:' },
             footer: { text: 'Official Multi-Device Engine' },
             action: {
               buttons: [
-                { type: 'reply', reply: { id: 'btn_help', title: '📖 Panduan' } },
-                { type: 'reply', reply: { id: 'btn_status', title: '⚡ Cek Status' } }
+                { type: 'reply', reply: { id: 'btn_help', title: '📖 Help' } },
+                { type: 'reply', reply: { id: 'btn_status', title: '⚡ Status' } }
               ]
             }
           }
-        });
-      }
-
-      // 4. Perintah !carousel
-      else if (body.toLowerCase() === '!carousel') {
-        await sock.sendMessage(remoteJid, {
-          text: 'Geser kartu ke kanan untuk melihat katalog:',
-          cards: [
-            {
-              header: { title: 'Layanan 1', subtitle: 'Rp 50.000', hasMediaAttachment: false },
-              body: { text: 'Deskripsi lengkap layanan pertama kami.' },
-              footer: { text: 'baileys-rec' },
-              nativeFlowMessage: {
-                buttons: [{ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Beli Layanan 1', id: 'buy_1' }) }]
-              }
-            },
-            {
-              header: { title: 'Layanan 2', subtitle: 'Rp 100.000', hasMediaAttachment: false },
-              body: { text: 'Deskripsi lengkap layanan kedua kami.' },
-              footer: { text: 'baileys-rec' },
-              nativeFlowMessage: {
-                buttons: [{ name: 'quick_reply', buttonParamsJson: JSON.stringify({ display_text: 'Beli Layanan 2', id: 'buy_2' }) }]
-              }
-            }
-          ]
         });
       }
     }
@@ -1341,29 +1209,28 @@ startProductionBot();
 
 ---
 
-## 12. Daftar Referensi API (API Reference Table)
+## 12. API Reference Table
 
-| Method / Fungsi | Tipe | Deskripsi |
+| Method / Function | Type | Description |
 | :--- | :--- | :--- |
-| `makeWASocket(config)` | Core Factory | Menginisialisasi koneksi socket baru WhatsApp multi-device. |
-| `useMultiFileAuthState(folder)` | Auth Handler | Mengelola sesi credentials WhatsApp multi-file yang aman dan persisten. |
-| `sock.requestPairingCode(phone)` | Auth Method | Meminta kode pairing 8 digit untuk otentikasi tanpa scan kamera QR. |
-| `sock.sendMessage(jid, content, opts)` | Messaging | Mengirim semua jenis pesan: teks, media, stiker, polling, button, cards. |
-| `sock.sendCloudApi(jid, payload, opts)` | **v1.2.1 New** | Mengirim pesan skema resmi Meta Cloud API langsung via socket Baileys. |
-| `createMetaCloudApiClient(config)` | **v1.2.1 New** | HTTP REST Client untuk mengirim pesan langsung ke Meta Graph API v21.0. |
-| `fromCloudApiMessage(payload)` | Converter | Mengonversi payload Meta Cloud API menjadi objek pesan Baileys. |
-| `toCloudApiMessage(to, content)` | Converter | Mengonversi pesan Baileys menjadi format payload Meta Cloud API. |
-| `diagnoseMetaCloudApiError(err)` | Diagnostic | Menganalisis kode error HTTP Meta (131047, 100, dll) dan memberi solusi. |
-| `sock.sendPresenceUpdate(type, jid)` | Presence | Mengirim status `composing`, `recording`, `paused`, atau `available`. |
-| `sock.readMessages([key])` | Receipts | Mengirim tanda centang biru (read receipt) untuk pesan tertentu. |
-| `sock.groupCreate(title, users)` | Group Management | Membuat grup WhatsApp baru dengan daftar anggota awal. |
-| `sock.groupMetadata(jid)` | Group Management | Mengambil informasi detail grup, nama, deskripsi, dan daftar admin. |
-| `sock.groupParticipantsUpdate(jid, users, action)` | Group Management | Menambahkan (`add`), mengeluarkan (`remove`), promote, atau demote admin. |
-| `sock.groupSettingUpdate(jid, setting)` | Group Management | Mengatur izin kirim pesan grup (`announcement` / `not_announcement`). |
-| `downloadMediaMessage(msg, type, opts, ctx)` | Media Download | Mengunduh file media terenkripsi WhatsApp menjadi Buffer memori. |
+| `makeWASocket(config)` | Core Factory | Initializes a new multi-device WhatsApp socket connection. |
+| `useMultiFileAuthState(folder)` | Auth Handler | Manages secure, persistent multi-file auth credentials. |
+| `sock.requestPairingCode(phone)` | Auth Method | Requests an 8-digit pairing code for camera-free authentication. |
+| `sock.sendMessage(jid, content, opts)` | Messaging | Sends any message type: text, media, stickers, polls, buttons, cards. |
+| `sock.sendCloudApi(jid, payload, opts)` | **v1.2.4 New** | Sends official Meta Cloud API JSON payload directly via Baileys socket. |
+| `createMetaCloudApiClient(config)` | **v1.2.4 New** | HTTP REST Client for Meta Graph API v21.0. |
+| `fromCloudApiMessage(payload)` | Converter | Converts Meta Cloud API payload into Baileys message objects. |
+| `toCloudApiMessage(to, content)` | Converter | Converts Baileys messages into Meta Cloud API JSON format. |
+| `diagnoseMetaCloudApiError(err)` | Diagnostic | Analyzes Meta HTTP error codes (131047, 100) and provides solutions. |
+| `sock.sendPresenceUpdate(type, jid)` | Presence | Sends `composing`, `recording`, `paused`, or `available` presence. |
+| `sock.readMessages([key])` | Receipts | Sends read receipts (blue ticks) for specified messages. |
+| `sock.groupCreate(title, users)` | Group Management | Creates a new WhatsApp group with initial participants. |
+| `sock.groupMetadata(jid)` | Group Management | Fetches group details, description, and admin list. |
+| `sock.groupParticipantsUpdate(jid, users, action)` | Group Management | Adds (`add`), removes (`remove`), promotes, or demotes members. |
+| `downloadMediaMessage(msg, type, opts, ctx)` | Media Download | Downloads encrypted WhatsApp media into memory Buffers. |
 
 ---
 
-## 📄 Lisensi
-Didistribusikan di bawah lisensi [MIT](LICENSE). Dibuat dan dikembangkan oleh **[KazeDevID](https://github.com/KazeDevID)**.  
-Kompabilitas penuh dengan protokol resmi **WhatsApp Business Multi-Device & Meta Cloud API 2026**.
+## 📄 License
+Distributed under the [MIT](LICENSE) License. Created and maintained by **[KazeDevID](https://github.com/KazeDevID)**.  
+Fully compatible with **WhatsApp Business Multi-Device & Meta Cloud API Protocols**.
