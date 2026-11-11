@@ -36,6 +36,9 @@ export function makeMessagesSocket(config: any): {
     updateMemberLabel: (jid: any, memberLabel: any) => Promise<any>;
     updateMediaMessage: (message: any) => Promise<any>;
     sendMessage: (jid: any, content: any, options?: {}) => Promise<proto.WebMessageInfo | undefined>;
+    sendInteractive: (jid: string, content: any, options?: any) => Promise<any>;
+    sendButton: (jid: string, content: any, options?: any) => Promise<any>;
+    sendRichMessage: (jid: string, content: any, options?: any) => Promise<any>;
     executeWMexQuery: (variables: any, queryId: any, dataPath: any) => Promise<any>;
     newsletterCreate: (name: any, description: any) => Promise<{
         id: any;

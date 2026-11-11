@@ -3,7 +3,7 @@
 > **Modern WhatsApp Web API Library for Node.js**
 > Enhanced with native flow interactive buttons, multi-card carousels, rich bot messages, and official Meta WhatsApp Business Cloud API protocol adapter.
 
-[![npm version](https://img.shields.io/badge/npm-v1.0.0-emerald.svg)](https://www.npmjs.com/package/baileys-rec)
+[![npm version](https://img.shields.io/badge/npm-v1.1.0-emerald.svg)](https://www.npmjs.com/package/baileys-rec)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-KazeDevID-orange.svg)](https://github.com/KazeDevID)
 
@@ -12,13 +12,11 @@
 ## Installation
 
 Install using npm:
-
 ```bash
 npm install baileys-rec
 ```
 
 Or using yarn / pnpm:
-
 ```bash
 yarn add baileys-rec
 # or
@@ -43,13 +41,13 @@ import makeWASocket, {
     DisconnectReason 
 } from "baileys-rec";
 
-async function startBot() {
+async function connectToWhatsApp() {
     const { state, saveCreds } = await useMultiFileAuthState("./auth_session");
 
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: true,
-        browser: ["baileys-rec", "Desktop", "1.0.0"]
+        browser: ["baileys-rec", "Chrome", "1.1.0"]
     });
 
     sock.ev.on("creds.update", saveCreds);
@@ -58,232 +56,184 @@ async function startBot() {
         const { connection, lastDisconnect } = update;
         if (connection === "close") {
             const shouldReconnect = 
-                (lastDisconnect?.error)?.output?.statusCode !== DisconnectReason.loggedOut;
+                lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
             console.log("Connection closed. Reconnecting:", shouldReconnect);
-            if (shouldReconnect) {
-                startBot();
-            }
+            if (shouldReconnect) connectToWhatsApp();
         } else if (connection === "open") {
-            console.log("Successfully connected to WhatsApp via baileys-rec!");
+            console.log("Connected to WhatsApp successfully with baileys-rec!");
         }
     });
 
-    sock.ev.on("messages.upsert", async ({ messages }) => {
-        const m = messages[0];
-        if (!m.message || m.key.fromMe) return;
-
-        const sender = m.key.remoteJid;
-        console.log("Received message from " + sender);
-    });
+    return sock;
 }
-
-startBot();
 ```
 
 ---
 
 ## Documentation
 
-### 2. Interactive Native Flow Buttons
+### 1. Send Interactive Messages (`sock.sendInteractive`)
 
-Create quick reply buttons, website call-to-actions, phone call dialers, and coupon copy buttons using ButtonBuilder:
+`baileys-rec` provides first-class methods for modern WhatsApp interactive messages (Native Flow buttons, single select list bottom sheets, multi-card carousels, and WhatsApp Flows):
+
+```typescript
+// Method A: Direct socket method
+await sock.sendInteractive(jid, {
+    text: "Please choose from the options below:",
+    footer: "Interactive Protocol • baileys-rec",
+    buttons: [
+        { id: "opt_pricing", text: "💎 View Pricing" },
+        { url: "https://github.com/KazeDevID/baileys-rec", text: "🌐 Open Docs" },
+        { call: "+1234567890", text: "📞 Call Support" },
+        { copy: "PROMO2026", text: "🎟️ Copy Voucher" }
+    ]
+});
+
+// Method B: Inside standard sock.sendMessage using "interactive" or "nativeFlow"
+await sock.sendMessage(jid, {
+    interactive: {
+        text: "Select a package to continue:",
+        footer: "Official Cloud API Compatible",
+        buttons: [
+            { id: "pkg_basic", text: "📦 Basic Tier" },
+            { id: "pkg_pro", text: "🚀 Pro Tier" }
+        ]
+    }
+});
+
+// Method C: Interactive List Menu (Bottom Sheet)
+await sock.sendInteractive(jid, {
+    text: "Browse our product catalog:",
+    footer: "Tap below to open options",
+    sections: [
+        {
+            title: "Development Services",
+            rows: [
+                { id: "service_bot", title: "WhatsApp Bot Dev", description: "Custom automated workflows" },
+                { id: "service_api", title: "API Integrations", description: "REST & Webhook endpoints" }
+            ]
+        },
+        {
+            title: "Support",
+            rows: [
+                { id: "service_help", title: "Customer Assistance", description: "24/7 dedicated engineers" }
+            ]
+        }
+    ],
+    buttonText: "View Catalog"
+});
+```
+
+---
+
+### 2. Send Button Messages (`sock.sendButton`)
+
+Send button messages with quick replies, call-to-actions, and optional image or video headers:
 
 ```typescript
 import { ButtonBuilder } from "baileys-rec";
 
+// Using ButtonBuilder
 const buttons = new ButtonBuilder()
-    .addReply("btn_services", "Our Services")
-    .addUrl("Visit Website", "https://github.com/KazeDevID/baileys-rec", true)
-    .addCall("Call Support", "+628123456789")
-    .addCopy("Copy Voucher", "DISCOUNT50")
+    .addReply("btn_agree", "✅ Agree & Continue")
+    .addReply("btn_decline", "❌ Cancel")
+    .addUrl("Terms of Service", "https://github.com/KazeDevID/baileys-rec")
     .build();
 
-await sock.sendMessage(jid, {
-    text: "Hello! Welcome to our customer support desk. Please choose an option below:",
-    footer: "Powered by baileys-rec v1.0.0",
-    nativeFlow: buttons
+await sock.sendButton(jid, {
+    text: "Do you agree with our terms of service?",
+    footer: "Security Verification",
+    buttons: buttons
+});
+
+// Or send with an image header
+await sock.sendButton(jid, {
+    image: { url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe" },
+    caption: "Here is your requested product flyer.",
+    footer: "Limited Time Offer",
+    buttons: [
+        { id: "buy_now", text: "🛒 Buy Now" },
+        { copy: "DISCOUNT50", text: "🎟️ Copy Coupon" }
+    ]
 });
 ```
-
-#### ButtonBuilder API Methods
-
-| Method | Description |
-|---|---|
-| `addReply(id, text, icon?)` | Adds a Quick Reply button that sends `id` back when tapped. |
-| `addUrl(text, url, useWebview?, icon?)` | Adds a Call To Action button opening an external link or in-app browser. |
-| `addCall(text, phoneNumber, icon?)` | Adds a button that initiates a phone call. |
-| `addCopy(text, code, icon?)` | Adds a button that copies a voucher or promo code to the user clipboard. |
-| `addList(title, sections, icon?)` | Adds a button that opens a bottom-sheet single select menu. |
-| `addFlow(flowId, text, token?, action?, payload?)` | Adds an interactive WhatsApp Flow action button. |
-| `build()` | Returns the compiled array of `NativeFlowButton` objects. |
 
 ---
 
-### 3. Meta WhatsApp Cloud API Protocol Adapter
+### 3. Send AI Rich Messages (`sock.sendRichMessage`)
 
-baileys-rec implements direct compatibility with the official Meta WhatsApp Business Messaging Cloud API format (https://developers.facebook.com/documentation/business-messaging/whatsapp/get-started). You can send standard Meta Cloud API JSON payloads directly without connecting to Meta Cloud servers:
+Create syntax-highlighted code blocks, formatted data tables, and verified AI bot cards:
 
 ```typescript
-// Standard Meta Cloud API JSON payload
-const metaPayload = {
-    messaging_product: "whatsapp",
-    recipient_type: "individual",
-    to: "628123456789",
-    type: "interactive",
-    interactive: {
-        type: "button",
-        header: {
-            type: "text",
-            text: "Order Confirmation"
-        },
-        body: {
-            text: "Your order #1089 is ready for delivery. Please confirm your address:"
-        },
-        footer: {
-            text: "Meta Cloud API Schema"
-        },
-        action: {
-            buttons: [
-                {
-                    type: "reply",
-                    reply: {
-                        id: "confirm_yes",
-                        title: "Confirm Address"
-                    }
-                },
-                {
-                    type: "reply",
-                    reply: {
-                        id: "reschedule",
-                        title: "Reschedule"
-                    }
-                }
-            ]
-        }
-    }
-};
+// Code snippet with syntax highlighting (supports JavaScript, Python, Rust, Go, SQL, HTML, etc.)
+await sock.sendRichMessage(jid, {
+    title: "TypeScript Solution",
+    code: `import { makeWASocket } from "baileys-rec";
 
-// Send directly in baileys-rec!
+const sock = makeWASocket({ printQRInTerminal: true });
+console.log("Ready!");`,
+    language: "typescript",
+    disclaimer: "Generated by Verified Bot"
+});
+
+// Formatted Data Table
+await sock.sendRichMessage(jid, {
+    title: "Quarterly Performance",
+    table: [
+        ["Quarter", "Metric", "Status"],
+        ["Q1", "99.9% Uptime", "Optimal"],
+        ["Q2", "1.2M Messages", "Delivered"],
+        ["Q3", "120ms Latency", "Fast"]
+    ],
+    disclaimer: "Verified Analytics Report"
+});
+
+// Or using sock.sendMessage({ richMessage: { ... } })
 await sock.sendMessage(jid, {
-    cloudApi: metaPayload
+    richMessage: {
+        code: "def greet():
+    return 'Hello World!'",
+        language: "python"
+    }
 });
 ```
 
-You can also convert payloads programmatically using helper functions:
+---
+
+### 4. Meta WhatsApp Business Cloud API Protocol Compatibility
+
+Send messages directly using the official Meta WhatsApp Cloud API request schema:
 
 ```typescript
+// Direct Cloud API payload
+await sock.sendMessage(jid, {
+    cloudApi: {
+        messaging_product: "whatsapp",
+        type: "interactive",
+        interactive: {
+            type: "button",
+            header: { type: "text", text: "Account Notice" },
+            body: { text: "Your server subscription renewal is pending." },
+            footer: { text: "Meta Cloud API Schema" },
+            action: {
+                buttons: [
+                    { type: "reply", reply: { id: "renew_now", title: "Renew Now 🚀" } },
+                    { type: "reply", reply: { id: "contact_rep", title: "Contact Sales" } }
+                ]
+            }
+        }
+    }
+});
+
+// Convert Meta Cloud API payloads to Baileys format
 import { fromCloudApiMessage, toCloudApiMessage } from "baileys-rec";
 
-// Convert Meta Cloud API payload into Baileys message content
-const baileysContent = fromCloudApiMessage(metaPayload);
-await sock.sendMessage(jid, baileysContent);
-
-// Convert Baileys message content back to Meta Cloud API JSON
-const cloudApiJson = toCloudApiMessage(baileysContent, "628123456789");
-```
-
----
-
-### 4. Interactive List Menu (Single Select Bottom Sheet)
-
-Send interactive categorized menu lists with sections and rows:
-
-```typescript
-const sections = [
-    {
-        title: "Beverages",
-        rows: [
-            { id: "item_coffee", title: "Espresso Coffee", description: "Freshly brewed dark roast" },
-            { id: "item_latte", title: "Caramel Latte", description: "Steamed milk with espresso and caramel" },
-            { id: "item_matcha", title: "Matcha Green Tea", description: "Authentic Kyoto matcha latte" }
-        ]
-    },
-    {
-        title: "Snacks & Pastries",
-        rows: [
-            { id: "item_croissant", title: "Almond Croissant", description: "Flaky butter pastry with almond cream" },
-            { id: "item_cheesecake", title: "New York Cheesecake", description: "Classic rich and creamy cheesecake" }
-        ]
-    }
-];
-
-await sock.sendMessage(jid, {
-    text: "Please browse our catalog and choose your favorite item:",
-    title: "Modern Coffee Roasters",
-    footer: "Open daily 08:00 - 22:00",
-    nativeFlow: [
-        {
-            text: "View Menu",
-            sections: sections
-        }
-    ]
-});
-```
-
----
-
-### 5. Multi-Card Interactive Carousel
-
-Send swipeable card carousels with image banners, titles, descriptions, and action buttons per card:
-
-```typescript
-await sock.sendMessage(jid, {
-    text: "Explore our featured products this week:",
-    cards: [
-        {
-            image: { url: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600" },
-            title: "Pro Smartphone Ultra",
-            subtitle: "2026 Flagship",
-            caption: "144Hz AMOLED Display with AI-powered processing and 200MP camera.",
-            nativeFlow: [
-                { id: "order_phone", text: "Buy Now - $999" },
-                { url: "https://github.com/KazeDevID/baileys-rec", text: "View Details" }
-            ]
-        },
-        {
-            image: { url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600" },
-            title: "Studio Wireless Headphones",
-            subtitle: "Active Noise Cancelling",
-            caption: "High resolution audio with 40-hour battery life and memory foam cushions.",
-            nativeFlow: [
-                { id: "order_audio", text: "Buy Now - $299" },
-                { copy: "AUDIO50", text: "Copy $50 Voucher" }
-            ]
-        }
-    ]
-});
-```
-
----
-
-### 6. AI Rich Response Messages (Code Blocks & Tables)
-
-Send syntax-highlighted code blocks, data tables, and verified bot messages:
-
-```typescript
-// 1. Syntax Highlighted Code Snippet
-await sock.sendMessage(jid, {
-    code: "import makeWASocket from 'baileys-rec';
-const sock = makeWASocket({ ... });",
-    language: "typescript",
-    footerText: "Formatted via baileys-rec syntax lexer"
-});
-
-// 2. Structured Data Table / Invoice
-await sock.sendMessage(jid, {
-    title: "Invoice Summary #REC-1089",
-    table: [
-        ["Item Description", "Qty", "Amount"],
-        ["Baileys-Rec License", "1", "$150.00"],
-        ["Priority Support", "1", "$50.00"],
-        ["Total Balance", "2", "$200.00"]
-    ],
-    footerText: "Verified digital invoice"
-});
+const baileysMessage = fromCloudApiMessage(metaPayload);
+await sock.sendMessage(jid, baileysMessage);
 ```
 
 ---
 
 ## License
 
-MIT License. Copyright (c) 2026 KazeDevID.
+MIT © [KazeDevID](https://github.com/KazeDevID)

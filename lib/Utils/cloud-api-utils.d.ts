@@ -51,3 +51,73 @@ export declare function fromCloudApiMessage(cloudApiPayload: any): any;
 export declare function toCloudApiMessage(baileysContent: any, recipientPhone?: string): any;
 export declare function buildButtonMessage(params: any): any;
 export declare function buildListMessage(params: any): any;
+
+export interface InteractiveMessageOptions {
+    text?: string;
+    body?: string;
+    title?: string;
+    header?: string;
+    footer?: string;
+    image?: string | { url: string };
+    video?: string | { url: string };
+    media?: any;
+    caption?: string;
+    buttons?: NativeFlowButton[] | ButtonBuilder;
+    nativeFlow?: NativeFlowButton[] | ButtonBuilder;
+    cards?: any[];
+    sections?: Array<{
+        title: string;
+        rows: Array<{
+            id: string;
+            title: string;
+            description?: string;
+        }>;
+    }>;
+    buttonText?: string;
+    button?: string;
+    bottomSheet?: {
+        buttonText?: string;
+        title?: string;
+    };
+    offer?: {
+        text: string;
+        url?: string;
+        code?: string;
+        expiration?: number;
+    };
+}
+
+export interface RichMessageOptions {
+    text?: string;
+    header?: string;
+    headerText?: string;
+    footer?: string;
+    footerText?: string;
+    title?: string;
+    disclaimer?: string;
+    disclaimerText?: string;
+    code?: string;
+    language?: string;
+    table?: Array<string[]>;
+    noHeading?: boolean;
+    links?: Array<{
+        text: string;
+        url?: string;
+        title?: string;
+        displayName?: string;
+        sources?: Array<{
+            displayName?: string;
+            subtitle?: string;
+            url?: string;
+        }>;
+    }>;
+    inlineImage?: string;
+    imageText?: string;
+    latex?: string[];
+}
+
+export declare function buildInteractiveMessage(params: InteractiveMessageOptions): any;
+export declare function buildRichMessage(params: RichMessageOptions): any;
+export declare function sendInteractiveMessage(sock: any, jid: string, content: InteractiveMessageOptions, options?: any): Promise<any>;
+export declare function sendButtonMessage(sock: any, jid: string, content: any, options?: any): Promise<any>;
+export declare function sendRichMessage(sock: any, jid: string, content: RichMessageOptions, options?: any): Promise<any>;
