@@ -121,3 +121,9 @@ export declare function buildRichMessage(params: RichMessageOptions): any;
 export declare function sendInteractiveMessage(sock: any, jid: string, content: InteractiveMessageOptions, options?: any): Promise<any>;
 export declare function sendButtonMessage(sock: any, jid: string, content: any, options?: any): Promise<any>;
 export declare function sendRichMessage(sock: any, jid: string, content: RichMessageOptions, options?: any): Promise<any>;
+
+export declare function sanitizeWhatsAppNumber(phone: string): string;
+export declare function diagnoseMetaCloudApiError(error: any): { code: number; title: string; explanation: string; suggestion: string };
+export declare function sendMetaCloudApi(config: { phoneNumberId: string; accessToken: string; apiVersion?: string }, payload: any): Promise<any>;
+export declare function createMetaCloudApiClient(config: { phoneNumberId: string; accessToken: string; apiVersion?: string }): any;
+export declare function sendCloudApiMessage(sock: any, jid: string, content: any, options?: any): Promise<any>;

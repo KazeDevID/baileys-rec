@@ -3,7 +3,7 @@
 > **Modern WhatsApp Web API Library for Node.js**  
 > Enhanced with native flow interactive buttons, multi-card swipeable carousels, rich bot messages, and official Meta WhatsApp Business Cloud API protocol adapter.
 
-[![npm version](https://img.shields.io/badge/npm-v1.2.0-emerald.svg)](https://www.npmjs.com/package/baileys-rec)
+[![npm version](https://img.shields.io/badge/npm-v1.2.1-emerald.svg)](https://www.npmjs.com/package/baileys-rec)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-KazeDevID-orange.svg)](https://github.com/KazeDevID)
 
@@ -227,7 +227,80 @@ await sock.sendRichMessage(jid, {
 
 ---
 
-### 5. Meta WhatsApp Business Cloud API Protocol Compatibility
+### 5. Meta WhatsApp Business Cloud API Protocol Compatibility (v1.2.1)
+
+Send messages directly using the official Meta WhatsApp Cloud API request schema through your Baileys socket connection or via direct HTTP Graph API:
+
+```typescript
+// Method 1: Using sock.sendCloudApi (Recommended for Meta Cloud API payloads)
+await sock.sendCloudApi(jid, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: "628123456789",
+    type: "interactive",
+    interactive: {
+        type: "button",
+        header: { type: "text", text: "Order Confirmation" },
+        body: { text: "Please choose an action for your order #1234:" },
+        footer: { text: "baileys-rec Official Cloud Adapter" },
+        action: {
+            buttons: [
+                { type: "reply", reply: { id: "pay_now", title: "💳 Pay Now" } },
+                { type: "reply", reply: { id: "cancel_order", title: "❌ Cancel" } }
+            ]
+        }
+    }
+});
+
+// Method 2: Inside sock.sendMessage using "cloudApi"
+await sock.sendMessage(jid, {
+    cloudApi: {
+        messaging_product: "whatsapp",
+        type: "interactive",
+        interactive: {
+            type: "cta_url",
+            body: { text: "Click below to view the latest update:" },
+            action: {
+                name: "cta_url",
+                parameters: {
+                    display_text: "🌐 Open Website",
+                    url: "https://github.com/KazeDevID/baileys-rec"
+                }
+            }
+        }
+    }
+});
+
+// Method 3: Direct HTTP Meta WhatsApp Business Cloud API Client
+import { sendMetaCloudApi, createMetaCloudApiClient, diagnoseMetaCloudApiError } from "baileys-rec";
+
+const client = createMetaCloudApiClient({
+    phoneNumberId: "YOUR_PHONE_NUMBER_ID",
+    accessToken: "YOUR_META_ACCESS_TOKEN",
+    apiVersion: "v21.0" // defaults to v21.0
+});
+
+// Send template message (required for 24h customer care window re-engagement)
+await client.sendTemplate("628123456789", "hello_world", "en_US");
+```
+
+---
+
+### 6. WhatsApp Chat Visibility & Delivery Troubleshooting
+
+If your messages send but **do not appear in WhatsApp chat**, check these key factors:
+
+1. **Native Flow & ViewOnce Message Envelope (Fixed in v1.2.1)**:
+   Modern WhatsApp clients (Android, iOS, Web) require interactive messages (buttons, lists, flows, and carousels) to specify `messageVersion: 1` and be wrapped in a `viewOnceMessage` context with `deviceListMetadataVersion: 2`. `baileys-rec@1.2.1` automatically handles this under the hood.
+
+2. **24-Hour Customer Care Window (Meta Cloud API)**:
+   According to Meta's Business Messaging policy, businesses can only send free-form messages (text, media, interactive buttons) within **24 hours** of the user's last message. Outside this 24-hour window, you **must send an approved Template Message** (`type: "template"`). Once the recipient replies, the 24-hour session opens.
+
+3. **Recipient Phone Number Format**:
+   Phone numbers for Meta Cloud API must be digits only in international E.164 format (e.g. `628123456789`), without `+`, without `@s.whatsapp.net`, and without leading `0`. `baileys-rec` provides `sanitizeWhatsAppNumber()` to normalize numbers automatically.
+
+4. **Sandbox / Test Phone Numbers**:
+   If using a Meta Developer Sandbox number, messages are only delivered to recipient phone numbers explicitly added to the "To Phone Numbers" whitelist in the Meta App Developer Dashboard.
 
 Send messages directly using the official Meta WhatsApp Cloud API request schema:
 
