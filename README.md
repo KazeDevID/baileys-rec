@@ -1,9 +1,9 @@
 # baileys-rec
 
-> **Modern WhatsApp Web API Library for Node.js**
-> Enhanced with native flow interactive buttons, multi-card carousels, rich bot messages, and official Meta WhatsApp Business Cloud API protocol adapter.
+> **Modern WhatsApp Web API Library for Node.js**  
+> Enhanced with native flow interactive buttons, multi-card swipeable carousels, rich bot messages, and official Meta WhatsApp Business Cloud API protocol adapter.
 
-[![npm version](https://img.shields.io/badge/npm-v1.1.0-emerald.svg)](https://www.npmjs.com/package/baileys-rec)
+[![npm version](https://img.shields.io/badge/npm-v1.2.0-emerald.svg)](https://www.npmjs.com/package/baileys-rec)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Author](https://img.shields.io/badge/Author-KazeDevID-orange.svg)](https://github.com/KazeDevID)
 
@@ -12,11 +12,13 @@
 ## Installation
 
 Install using npm:
+
 ```bash
 npm install baileys-rec
 ```
 
 Or using yarn / pnpm:
+
 ```bash
 yarn add baileys-rec
 # or
@@ -47,7 +49,7 @@ async function connectToWhatsApp() {
     const sock = makeWASocket({
         auth: state,
         printQRInTerminal: true,
-        browser: ["baileys-rec", "Chrome", "1.1.0"]
+        browser: ["baileys-rec", "Chrome", "1.2.0"]
     });
 
     sock.ev.on("creds.update", saveCreds);
@@ -77,7 +79,7 @@ async function connectToWhatsApp() {
 `baileys-rec` provides first-class methods for modern WhatsApp interactive messages (Native Flow buttons, single select list bottom sheets, multi-card carousels, and WhatsApp Flows):
 
 ```typescript
-// Method A: Direct socket method
+// Method A: Direct socket method with Quick Reply & Action Buttons
 await sock.sendInteractive(jid, {
     text: "Please choose from the options below:",
     footer: "Interactive Protocol • baileys-rec",
@@ -126,7 +128,42 @@ await sock.sendInteractive(jid, {
 
 ---
 
-### 2. Send Button Messages (`sock.sendButton`)
+### 2. Swipeable Multi-Card Carousel (`cards`)
+
+Create horizontal swipeable carousels with banner media and interactive buttons for each card:
+
+```typescript
+await sock.sendInteractive(jid, {
+    text: "Explore our featured collection:",
+    footer: "Swipe horizontally to view all items",
+    cards: [
+        {
+            image: { url: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600" },
+            title: "Smartphone Pro Ultra",
+            subtitle: "Flagship Edition",
+            caption: "144Hz AMOLED screen with 200MP camera system.",
+            buttons: [
+                { id: "buy_phone", text: "Buy Now ($999)" },
+                { url: "https://github.com/KazeDevID/baileys-rec", text: "Specs" }
+            ]
+        },
+        {
+            image: { url: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600" },
+            title: "Studio Headphones",
+            subtitle: "Active Noise Cancelling",
+            caption: "Hi-Res Audio with 40 hours wireless playback.",
+            buttons: [
+                { id: "buy_audio", text: "Buy Now ($299)" },
+                { copy: "PROMO20", text: "Copy 20% Off" }
+            ]
+        }
+    ]
+});
+```
+
+---
+
+### 3. Send Button Messages (`sock.sendButton`)
 
 Send button messages with quick replies, call-to-actions, and optional image or video headers:
 
@@ -160,16 +197,15 @@ await sock.sendButton(jid, {
 
 ---
 
-### 3. Send AI Rich Messages (`sock.sendRichMessage`)
+### 4. Send AI Rich Messages (`sock.sendRichMessage`)
 
 Create syntax-highlighted code blocks, formatted data tables, and verified AI bot cards:
 
 ```typescript
-// Code snippet with syntax highlighting (supports JavaScript, Python, Rust, Go, SQL, HTML, etc.)
+// Code snippet with syntax highlighting (supports JavaScript, TypeScript, Python, Rust, Go, SQL, HTML, etc.)
 await sock.sendRichMessage(jid, {
     title: "TypeScript Solution",
-    code: `import { makeWASocket } from "baileys-rec";
-
+    code: `import makeWASocket from "baileys-rec";
 const sock = makeWASocket({ printQRInTerminal: true });
 console.log("Ready!");`,
     language: "typescript",
@@ -187,38 +223,33 @@ await sock.sendRichMessage(jid, {
     ],
     disclaimer: "Verified Analytics Report"
 });
-
-// Or using sock.sendMessage({ richMessage: { ... } })
-await sock.sendMessage(jid, {
-    richMessage: {
-        code: "def greet():
-    return 'Hello World!'",
-        language: "python"
-    }
-});
 ```
 
 ---
 
-### 4. Meta WhatsApp Business Cloud API Protocol Compatibility
+### 5. Meta WhatsApp Business Cloud API Protocol Compatibility
 
 Send messages directly using the official Meta WhatsApp Cloud API request schema:
 
 ```typescript
-// Direct Cloud API payload
+// Direct Cloud API Carousel payload
 await sock.sendMessage(jid, {
     cloudApi: {
         messaging_product: "whatsapp",
         type: "interactive",
         interactive: {
-            type: "button",
-            header: { type: "text", text: "Account Notice" },
-            body: { text: "Your server subscription renewal is pending." },
-            footer: { text: "Meta Cloud API Schema" },
+            type: "carousel",
+            body: { text: "Discover our popular catalog:" },
             action: {
-                buttons: [
-                    { type: "reply", reply: { id: "renew_now", title: "Renew Now 🚀" } },
-                    { type: "reply", reply: { id: "contact_rep", title: "Contact Sales" } }
+                cards: [
+                    {
+                        card_index: 0,
+                        header: { type: "image", image: { link: "https://example.com/item1.jpg" } },
+                        body: { text: "Item 1 Description" },
+                        action: {
+                            buttons: [{ type: "reply", reply: { id: "item_1", title: "Order" } }]
+                        }
+                    }
                 ]
             }
         }
