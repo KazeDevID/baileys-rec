@@ -127,3 +127,5 @@ export declare function diagnoseMetaCloudApiError(error: any): { code: number; t
 export declare function sendMetaCloudApi(config: { phoneNumberId: string; accessToken: string; apiVersion?: string }, payload: any): Promise<any>;
 export declare function createMetaCloudApiClient(config: { phoneNumberId: string; accessToken: string; apiVersion?: string }): any;
 export declare function sendCloudApiMessage(sock: any, jid: string, content: any, options?: any): Promise<any>;
+
+export declare function serializeMessage(msg: any): any;

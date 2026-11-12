@@ -6,7 +6,8 @@ import {
     sanitizeWhatsAppNumber,
     diagnoseMetaCloudApiError,
     ButtonBuilder,
-    MessageBuilder
+    MessageBuilder,
+    serializeMessage
 } from './lib/Utils/cloud-api-utils.js';
 import {
     generateWAMessageContent,
@@ -140,4 +141,138 @@ test('diagnoseMetaCloudApiError detects 24h window expiration, token issues, and
 
     const diagToken = diagnoseMetaCloudApiError({ code: 190, message: 'Access token expired' });
     assert.ok(diagToken.title.includes('Access Token Expired'));
+});
+
+test('ButtonBuilder generates cta_reminder, send_location, open_webview, flow, and payment', () => {
+    const builder = new ButtonBuilder()
+        .addReminder("Set Alarm", "Wake up call", 1731500000)
+        .addLocation("Send GPS")
+        .addWebview("Portal", "https://wa.me")
+        .addPayment("Bayar", { amount: { value: 50000, offset: 100 }, currency: "IDR" })
+        .addCancelReminder("Batalkan", "rem_01");
+
+    const buttons = builder.build();
+    assert.equal(buttons.length, 5);
+    assert.equal(buttons[0].reminder.title, "Wake up call");
+    assert.equal(buttons[0].reminder.time, 1731500000);
+    assert.equal(buttons[1].name, "send_location");
+    assert.equal(buttons[2].webview.url, "https://wa.me");
+    assert.equal(buttons[3].payment.currency, "IDR");
+    assert.equal(buttons[4].cancelReminder, "rem_01");
+});
+
+test('generateWAMessageContent generates nativeFlow with cta_reminder, send_location, open_webview, flow, and locationHeader', async () => {
+    const payload = {
+        text: "Interactive Feature Test",
+        location: {
+            degreesLatitude: -6.2088,
+            degreesLongitude: 106.8456,
+            name: "Jakarta Monas",
+            address: "Jakarta, Indonesia"
+        },
+        nativeFlow: [
+            { reminder: { title: "Daily Sync", time: 1731500000 }, text: "⏰ Reminder" },
+            { cancelReminder: "sync_123", text: "❌ Batal" },
+            { sendLocation: true, text: "📍 Kirim Lokasi" },
+            { webview: { url: "https://google.com" }, text: "🌐 Browser" },
+            { flow: { id: "flow_123", cta: "Mulai Form", token: "tok_abc" }, text: "Buka Form" },
+            { payment: { currency: "IDR", amount: { value: 25000 } }, text: "💳 Bayar 25k" },
+            { order: { id: "ORD-99", status: "pending" }, text: "🛍️ Cek Pesanan" },
+            { callPermission: true, text: "📞 Izin Nelpon" },
+            { address: { type: "shipping" }, text: "🏠 Alamat Kirim" }
+        ]
+    };
+
+    const content = await generateWAMessageContent(payload, {});
+    assert.ok(content.viewOnceMessage, "Must be wrapped in viewOnceMessage");
+    const inner = content.viewOnceMessage.message.interactiveMessage;
+    assert.ok(inner.header?.locationMessage, "Location header must be attached");
+    assert.equal(inner.header.locationMessage.degreesLatitude, -6.2088);
+    assert.equal(inner.header.locationMessage.name, "Jakarta Monas");
+
+    const btns = inner.nativeFlowMessage.buttons;
+    assert.equal(btns.length, 9);
+    assert.equal(btns[0].name, "cta_reminder");
+    assert.equal(btns[1].name, "cta_cancel_reminder");
+    assert.equal(btns[2].name, "send_location");
+    assert.equal(btns[3].name, "open_webview");
+    assert.equal(btns[4].name, "flow");
+    assert.equal(btns[5].name, "review_and_pay");
+    assert.equal(btns[6].name, "review_order");
+    assert.equal(btns[7].name, "call_permission_request");
+    assert.equal(btns[8].name, "address_message");
+
+    const flowParams = JSON.parse(btns[4].buttonParamsJson);
+    assert.equal(flowParams.flow_id, "flow_123");
+    assert.equal(flowParams.flow_token, "tok_abc");
+});
+
+test('generateWAMessageContent handles eventMessage with flexible timestamp or Date', async () => {
+    const payload = {
+        event: {
+            name: "WhatsApp Community Meetup 2026",
+            description: "Discussing modern WhatsApp protocols",
+            startDate: 1731500000,
+            endDate: 1731507200,
+            extraGuestsAllowed: true
+        }
+    };
+
+    const content = await generateWAMessageContent(payload, {});
+    assert.ok(content.eventMessage, "eventMessage must exist");
+    assert.equal(content.eventMessage.name, "WhatsApp Community Meetup 2026");
+    assert.equal(Number(content.eventMessage.startTime), 1731500000);
+    assert.equal(Number(content.eventMessage.endTime), 1731507200);
+});
+
+test('serializeMessage accurately extracts interactive clicks, flows, and event RSVPs', () => {
+    // 1. Native flow button click simulation
+    const rawFlowClick = {
+        key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "MSG_001" },
+        pushName: "Budi",
+        message: {
+            interactiveResponseMessage: {
+                nativeFlowResponseMessage: {
+                    name: "quick_reply",
+                    paramsJson: JSON.stringify({ id: "btn_checkout", display_text: "Checkout Now" })
+                }
+            }
+        }
+    };
+    const parsedFlow = serializeMessage(rawFlowClick);
+    assert.equal(parsedFlow.sender, "6281234567890@s.whatsapp.net");
+    assert.equal(parsedFlow.interactive?.type, "native_flow");
+    assert.equal(parsedFlow.interactive?.id, "btn_checkout");
+    assert.equal(parsedFlow.interactive?.text, "Checkout Now");
+    assert.equal(parsedFlow.body, "btn_checkout");
+
+    // 2. WhatsApp Flow form submission simulation
+    const rawFlowForm = {
+        key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "MSG_002" },
+        pushName: "Budi",
+        message: {
+            interactiveResponseMessage: {
+                nativeFlowResponseMessage: {
+                    name: "flow",
+                    paramsJson: JSON.stringify({ flow_token: "tok_123", screen: "SURVEY", rating: 5 })
+                }
+            }
+        }
+    };
+    const parsedForm = serializeMessage(rawFlowForm);
+    assert.equal(parsedForm.interactive?.name, "flow");
+    assert.equal(parsedForm.interactive?.params?.rating, 5);
+
+    // 3. Event RSVP response simulation
+    const rawEventRsvp = {
+        key: { remoteJid: "6281234567890@s.whatsapp.net", fromMe: false, id: "MSG_003" },
+        message: {
+            eventResponseMessage: {
+                response: 1, // GOING
+                timestampMs: 1731500000000
+            }
+        }
+    };
+    const parsedRsvp = serializeMessage(rawEventRsvp);
+    assert.equal(parsedRsvp.eventRsvp?.status, "GOING");
 });

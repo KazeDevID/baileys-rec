@@ -1,6 +1,7 @@
-# 🚀 baileys-rec (v1.2.4)
+# 🚀 baileys-rec (v1.3.0)
 
-> **The Next-Generation WhatsApp Multi-Device & Meta Cloud API Library for Node.js.**  
+> **The Next-Generation WhatsApp Multi-Device & Meta Cloud API Library for Node.js.**
+> **v1.3.0 Update**: Full Native Flow Interactive Buttons (Reminders, Webview, Location Request, WhatsApp Flows, Payments), WhatsApp Calendar Events, Message Pinning, and Universal `serializeMessage` Extractor.  
 > An official enhanced fork of Baileys featuring full protocol integration for **Meta WhatsApp Business Cloud API**, **Native Flow v2 Interactive Buttons**, **Swipeable Multi-Card Carousel**, **Pairing Code Authentication**, and robust memory optimization & auto-reconnect.
 
 [![npm version](https://img.shields.io/npm/v/baileys-rec.svg?style=flat-square&color=00d26a)](https://www.npmjs.com/package/baileys-rec)
