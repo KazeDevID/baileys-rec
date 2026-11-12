@@ -1,4 +1,4 @@
-# 🚀 baileys-rec (v1.3.0)
+# 🚀 baileys-rec (v1.4.0)
 
 > **The Next-Generation WhatsApp Multi-Device & Meta Cloud API Library for Node.js.**
 > **v1.3.0 Update**: Full Native Flow Interactive Buttons (Reminders, Webview, Location Request, WhatsApp Flows, Payments), WhatsApp Calendar Events, Message Pinning, and Universal `serializeMessage` Extractor.  
@@ -476,6 +476,41 @@ await sock.sendMessage(jid, {
 ```
 
 ---
+
+
+---
+
+## 🌟 NEW in v1.4.0: Fluent Builder Suite & Meta GenAI Rich Responses
+
+ v1.4.0 introduces an object-oriented, chainable builder system alongside official Meta GenAI rich message responses (syntax-highlighted code blocks, tables, inline citations, suggestion chips, latex formulas, and animated dynamic media).
+
+### 1. Fluent Button Builder ()
+
+Construct full Native Flow interactive messages with zero manual JSON boilerplate:
+
+
+
+### 2. Swipeable Multi-Card Carousel ()
+
+Combine multiple  instances or card objects into a smooth swipeable carousel:
+
+
+
+### 3. Meta GenAI Rich Bot Responses ( / )
+
+Render beautiful AI responses equipped with syntax highlighting, markdown tables, clickable references, and follow-up chips:
+
+async function syncSession(sock: any) {
+  const status = await sock.authState();
+  console.log('Session online:', status.creds.me?.id);
+  return status;
+}
+
+### 4. Standalone Generators & Markdown Lexer ( & )
+
+Directly generate rich payloads or parse inline markdown entities:
+
+
 
 ## 5. Interactive Messages & Native Flow (v1.2.4 Flagship)
 

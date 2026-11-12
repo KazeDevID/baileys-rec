@@ -24,3 +24,5 @@ export * from "./identity-change-handler.js";
 export * from "./stanza-ack.js";
 
 export * from "./cloud-api-utils.js";
+
+export * from './helpers.js';

@@ -40,6 +40,21 @@ export function makeMessagesSocket(config: any): {
     sendButton: (jid: string, content: any, options?: any) => Promise<any>;
     sendRichMessage: (jid: string, content: any, options?: any) => Promise<any>;
     sendCloudApi: (jid: string, content: any, options?: any) => Promise<any>;
+    createButton: () => import('../Utils/helpers.js').Button;
+    Button: () => import('../Utils/helpers.js').Button;
+    createButtonV2: () => import('../Utils/helpers.js').ButtonV2;
+    ButtonV2: () => import('../Utils/helpers.js').ButtonV2;
+    createCarousel: () => import('../Utils/helpers.js').Carousel;
+    Carousel: () => import('../Utils/helpers.js').Carousel;
+    createRich: () => import('../Utils/helpers.js').AIRich;
+    AIRich: () => import('../Utils/helpers.js').AIRich;
+    Rich: () => import('../Utils/helpers.js').AIRich;
+    sendTable: (jid: string, table: any[], quoted?: any, options?: any) => Promise<any>;
+    sendCodeBlock: (jid: string, code: string, quoted?: any, options?: any) => Promise<any>;
+    sendLink: (jid: string, text: string, links: any[], quoted?: any, options?: any) => Promise<any>;
+    sendLatex: (jid: string, options?: any) => Promise<any>;
+    sendAIRich: (jid: string, richBuilderOrFn: any, options?: any) => Promise<any>;
+
     executeWMexQuery: (variables: any, queryId: any, dataPath: any) => Promise<any>;
     newsletterCreate: (name: any, description: any) => Promise<{
         id: any;
