@@ -129,6 +129,13 @@ export declare class Button extends BaseBuilder {
     addReminder(display_text?: string, timestamp?: number | null, options?: any): this;
     addCancelReminder(display_text?: string, options?: any): this;
     addCatalog(display_text?: string, business_owner_jid?: string, options?: any): this;
+    addProduct(productRetailerId: string, catalogId: string, displayText?: string, options?: any): this;
+    addProductList(catalogId: string, sections?: any[], displayText?: string, options?: any): this;
+    addPayment(paymentConfig?: any, displayText?: string, options?: any): this;
+    addPixPayment(pixCode: string, amount?: number | any, merchantName?: string, displayText?: string, options?: any): this;
+    addPaymentStatus(referenceId: string, status?: string, paymentConfig?: any, displayText?: string, options?: any): this;
+    addCallPermission(displayText?: string, options?: any): this;
+    addWebview(url: string, displayText?: string, title?: string, options?: any): this;
     toCard(): Promise<any>;
     build(jid: string, options?: any): Promise<any>;
     send(jid: string, options?: any): Promise<any>;

@@ -258,3 +258,28 @@ test('sanitizeQuotedMessage cleanly normalizes various quoted structures', () =>
   const sanitized2 = sanitizeQuotedMessage(textOnlyQuoted);
   assert.equal(sanitized2.message.conversation, 'Text only quote');
 });
+
+test("Button fluent suite chains addProduct, addProductList, addPixPayment, addPaymentStatus, addWebview, addCallPermission", async () => {
+  const btn = new Button()
+    .setTitle("Catalog & Payments")
+    .setBody("Explore our shop directly via WA Proto without Meta Cloud tokens")
+    .setFooter("Powered by Baileys-Rec")
+    .addProduct("PROD_SHOES_42", "CATALOG_INDONESIA", "Lihat Sepatu")
+    .addProductList("CATALOG_INDONESIA", [{ title: "Kategori Pilihan", product_items: [{ product_retailer_id: "P1" }] }], "Jelajahi")
+    .addPixPayment("user@pix.com.br", 25000, "Toko Kaze", "Bayar via Pix")
+    .addPaymentStatus("REF_9988", "success", { currency: "IDR", amount: { value: 2500000, offset: 100 } })
+    .addWebview("https://kazedev.id", "Buka Web", "Portal Toko")
+    .addCallPermission("Minta Panggilan Audio");
+
+  const built = await btn.build("628123456789@s.whatsapp.net");
+  const inner = built.message?.viewOnceMessage?.message?.interactiveMessage || built.message?.interactiveMessage;
+  const nativeFlow = inner.nativeFlowMessage;
+  assert.ok(nativeFlow, "nativeFlowMessage must exist");
+  assert.equal(nativeFlow.buttons.length, 6);
+  assert.equal(nativeFlow.buttons[0].name, "single_product");
+  assert.equal(nativeFlow.buttons[1].name, "product_list");
+  assert.equal(nativeFlow.buttons[2].name, "review_and_pay");
+  assert.equal(nativeFlow.buttons[3].name, "payment_status_update");
+  assert.equal(nativeFlow.buttons[4].name, "open_webview");
+  assert.equal(nativeFlow.buttons[5].name, "call_permission_request");
+});

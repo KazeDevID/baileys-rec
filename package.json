@@ -1,8 +1,8 @@
 {
   "name": "baileys-rec",
   "type": "module",
-  "version": "1.4.0",
-  "description": "WhatsApp Web API library for Node.js with Native Flow Interactive Buttons, Fluent Builders (Button, Carousel, AIRich), Meta GenAI Rich Responses, Flow Forms, Reminders, and Meta WhatsApp Cloud API protocol adapter",
+  "version": "1.5.0",
+  "description": "WhatsApp Web API library for Node.js with Native Flow Interactive Buttons, Single & Multi Product Catalog, Flow Forms v3, Address & Order Details, Pix Payments, Reminders, Fluent Builders (Button, Carousel, AIRich), Meta GenAI Rich Responses, and Pure Proto WhatsApp Cloud API adapter (no tokens or keys required)",
   "keywords": [
     "whatsapp",
     "baileys",
