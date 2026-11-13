@@ -460,3 +460,134 @@ test("generateWAMessageContent produces valid WAProto nativeFlowMessage for sing
     assert.equal(params0.product_retailer_id, "SHOE_99");
     assert.equal(nativeFlow.buttons[1].name, "product_list");
 });
+
+import {
+    generateWaveform,
+    FlowBuilder,
+    NewsletterHelper
+} from "./lib/Utils/cloud-api-utils.js";
+import { Button } from "./lib/Utils/helpers.js";
+
+test("generateWaveform produces valid amplitude array for WhatsApp PTT voice notes", () => {
+    const wave = generateWaveform(64, { min: 10, max: 90 });
+    assert.equal(wave instanceof Uint8Array, true);
+    assert.equal(wave.length, 64);
+    for (let i = 0; i < wave.length; i++) {
+        assert.ok(wave[i] >= 10 && wave[i] <= 90, `Wave value ${wave[i]} must be within range`);
+    }
+});
+
+test("FlowBuilder constructs valid WhatsApp Flows v3 JSON schema and native flow button", () => {
+    const fb = new FlowBuilder("flow_feedback", "Customer Feedback")
+        .addScreen("SCREEN_RATING", "Rate Our Service")
+        .addTextInput("cust_name", "Your Name", { required: true })
+        .addDropdown("rating_stars", "Rating", ["5 Stars", "4 Stars", "3 Stars"])
+        .addRadioButtons("satisfaction", "Satisfied?", [{ id: "yes", title: "Yes" }, { id: "no", title: "No" }])
+        .addFooter("Submit", "complete");
+
+    const json = fb.buildJSON();
+    assert.equal(json.version, "3.1");
+    assert.equal(json.screens.length, 1);
+    assert.equal(json.screens[0].id, "SCREEN_RATING");
+    assert.equal(json.screens[0].layout.children.length, 4);
+
+    const btn = fb.toFlowButton("Isi Formulir", "tok_123");
+    assert.equal(btn.name, "flow");
+    const parsed = JSON.parse(btn.buttonParamsJson);
+    assert.equal(parsed.flow_id, "flow_feedback");
+    assert.equal(parsed.flow_cta, "Isi Formulir");
+    assert.equal(parsed.flow_action_payload.screen, "SCREEN_RATING");
+});
+
+test("NewsletterHelper correctly identifies newsletter JIDs and formats channel messages", () => {
+    assert.equal(NewsletterHelper.isNewsletterJid("123456789012345@newsletter"), true);
+    assert.equal(NewsletterHelper.isNewsletterJid("6281234567890@s.whatsapp.net"), false);
+    assert.equal(NewsletterHelper.isNewsletterJid("1234567890@g.us"), false);
+
+    const msg = NewsletterHelper.buildNewsletterMessage("Breaking news announcement", {
+        isForwarded: false
+    });
+    assert.equal(msg.text, "Breaking news announcement");
+});
+
+test("fromCloudApiMessage supports official Meta WhatsApp templates with header, params, and buttons", () => {
+    const tmplPayload = {
+        messaging_product: "whatsapp",
+        type: "template",
+        template: {
+            name: "order_confirmation_v2",
+            language: { code: "en_US" },
+            components: [
+                {
+                    type: "header",
+                    parameters: [{ type: "text", text: "Order Confirmed #9948" }]
+                },
+                {
+                    type: "body",
+                    parameters: [
+                        { type: "text", text: "Alex" },
+                        { type: "text", text: "Wireless Headphones" }
+                    ]
+                },
+                {
+                    type: "footer",
+                    parameters: [{ type: "text", text: "Thank you for shopping" }]
+                },
+                {
+                    type: "button",
+                    sub_type: "url",
+                    index: "0",
+                    text: "Track Package",
+                    parameters: [{ type: "text", text: "tracker.com/9948" }]
+                },
+                {
+                    type: "button",
+                    sub_type: "copy_code",
+                    index: "1",
+                    text: "Copy Promo Code",
+                    parameters: [{ type: "coupon_code", coupon_code: "SAVE2026" }]
+                }
+            ]
+        }
+    };
+
+    const converted = fromCloudApiMessage(tmplPayload);
+    assert.equal(converted.title, "Order Confirmed #9948");
+    assert.equal(converted.text, "Alex Wireless Headphones");
+    assert.equal(converted.footer, "Thank you for shopping");
+    assert.equal(converted.nativeFlow.length, 2);
+    assert.equal(converted.nativeFlow[0].url, "https://tracker.com/9948");
+    assert.equal(converted.nativeFlow[1].copy, "SAVE2026");
+});
+
+test("fromCloudApiMessage auto-attaches waveform to PTT audio messages", () => {
+    const audioPayload = {
+        messaging_product: "whatsapp",
+        type: "audio",
+        audio: {
+            link: "https://example.com/voice.ogg",
+            ptt: true
+        }
+    };
+    const converted = fromCloudApiMessage(audioPayload);
+    assert.equal(converted.ptt, true);
+    assert.ok(converted.waveform instanceof Uint8Array);
+    assert.equal(converted.waveform.length, 64);
+});
+
+test("Button fluent suite chains addOtp and addOrderStatus", () => {
+    const btn = new Button()
+        .addOtp("482910", "Salin OTP")
+        .addOrderStatus("ORD_100", "completed", "Pesanan telah dikirim");
+
+    assert.equal(btn._buttons.length, 2);
+    assert.equal(btn._buttons[0].name, "cta_copy");
+    const otpParams = JSON.parse(btn._buttons[0].buttonParamsJson);
+    assert.equal(otpParams.copy_code, "482910");
+    assert.equal(otpParams.otp, true);
+
+    assert.equal(btn._buttons[1].name, "order_status");
+    const orderParams = JSON.parse(btn._buttons[1].buttonParamsJson);
+    assert.equal(orderParams.reference_id, "ORD_100");
+    assert.equal(orderParams.order_status, "completed");
+});

@@ -136,6 +136,8 @@ export declare class Button extends BaseBuilder {
     addPaymentStatus(referenceId: string, status?: string, paymentConfig?: any, displayText?: string, options?: any): this;
     addCallPermission(displayText?: string, options?: any): this;
     addWebview(url: string, displayText?: string, title?: string, options?: any): this;
+    addOtp(code: string | number, displayText?: string, options?: any): this;
+    addOrderStatus(referenceId: string, status?: string, description?: string, options?: any): this;
     toCard(): Promise<any>;
     build(jid: string, options?: any): Promise<any>;
     send(jid: string, options?: any): Promise<any>;
@@ -177,3 +179,5 @@ export declare class AIRich extends BaseBuilder {
 }
 
 export declare class Rich extends AIRich {}
+
+export { generateWaveform, FlowBuilder, NewsletterHelper } from "./cloud-api-utils.js";
