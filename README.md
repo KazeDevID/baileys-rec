@@ -1,7 +1,7 @@
-# 🚀 baileys-rec (v1.4.0)
+# 🚀 baileys-rec (v1.5.0)
 
 > **The Next-Generation WhatsApp Multi-Device & Meta Cloud API Library for Node.js.**
-> **v1.3.0 Update**: Full Native Flow Interactive Buttons (Reminders, Webview, Location Request, WhatsApp Flows, Payments), WhatsApp Calendar Events, Message Pinning, and Universal `serializeMessage` Extractor.  
+> **v1.5.0 Flagship**: 100% Pure WhatsApp Protobuf (WAProto) support for ALL Meta Cloud API message formats without requiring tokens or keys! Includes Single Product (`single_product`), Multi-Product Catalog List (`product_list`), Open Catalog (`open_catalog`), Address Request (`address_message`), Order Details (`review_order`), Pix Payments & Status Updates (`review_and_pay`, `payment_status_update`), Meta Flows v3 (`flow` with mode & actions), In-App Webview (`open_webview`), Voice Note with Waveform/PTT, Polls, Calendar Events, and zero-token `fromCloudApiMessage` converter.  
 > An official enhanced fork of Baileys featuring full protocol integration for **Meta WhatsApp Business Cloud API**, **Native Flow v2 Interactive Buttons**, **Swipeable Multi-Card Carousel**, **Pairing Code Authentication**, and robust memory optimization & auto-reconnect.
 
 [![npm version](https://img.shields.io/npm/v/baileys-rec.svg?style=flat-square&color=00d26a)](https://www.npmjs.com/package/baileys-rec)
@@ -11,6 +11,116 @@
 [![Node.js Version](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg?style=flat-square)](https://nodejs.org/)
 
 ---
+
+
+## 🌟 What is New in v1.5.0: Pure Proto WhatsApp Cloud Feature Parity (Zero Token / No Key)
+
+In version 1.5.0, `baileys-rec` bridges the entire gap between Meta WhatsApp Business Cloud API and Baileys multi-device socket. You can now use all official Meta interactive message formats **without creating a Meta developer account, without registering business managers, without paying per conversation, and without any API tokens or keys**!
+
+### 1. Single Product & Multi-Product Catalog (Native Flow Proto)
+
+```typescript
+import { Button } from "baileys-rec";
+
+// Send Single Product directly via WAProto (no tokens needed)
+await new Button(sock)
+  .setTitle("Featured Sneakers")
+  .setBody("Check out the latest Nike Air Max 2026")
+  .setFooter("Official Store")
+  .addProduct("NIKE_AIR_MAX", "CATALOG_ID_123", "🛍️ Lihat Produk")
+  .send(jid);
+
+// Send Multi-Product Section List
+await new Button(sock)
+  .setTitle("Our Catalog Collection")
+  .setBody("Browse through our seasonal collection")
+  .addProductList("CATALOG_ID_123", [
+    {
+      title: "Footwear",
+      product_items: [{ product_retailer_id: "SHOE_01" }, { product_retailer_id: "SHOE_02" }]
+    },
+    {
+      title: "Apparel",
+      product_items: [{ product_retailer_id: "HOODIE_01" }]
+    }
+  ], "🛍️ Lihat Katalog Produk")
+  .send(jid);
+```
+
+### 2. Pix Payments & Payment Status Updates
+
+```typescript
+// Send Instant Pix / Payment Request
+await new Button(sock)
+  .setTitle("Invoice #INV-2026")
+  .setBody("Total Pembayaran: Rp 150.000")
+  .addPixPayment("payment@merchant.com", 150000, "Toko Online", "💳 Bayar Sekarang")
+  .send(jid);
+
+// Send Payment Status Notification
+await new Button(sock)
+  .setTitle("Status Transaksi")
+  .setBody("Pembayaran Anda telah diverifikasi!")
+  .addPaymentStatus("INV-2026", "success", {
+    currency: "IDR",
+    amount: { value: 15000000, offset: 100 }
+  }, "Detail Transaksi")
+  .send(jid);
+```
+
+### 3. Address Request & Order Details
+
+```typescript
+// Request Customer Address (Interactive Bottom-sheet)
+await new Button(sock)
+  .setTitle("Konfirmasi Pengiriman")
+  .setBody("Silakan lengkapi alamat pengiriman Anda:")
+  .addAddressRequest("🏠 Isi Alamat Pengiriman", "shipping")
+  .send(jid);
+
+// Send Order Review & Checkout
+await new Button(sock)
+  .setTitle("Ringkasan Pesanan")
+  .setBody("Pesanan siap diproses:")
+  .addReviewOrder({
+    order_id: "ORD_789",
+    items: [
+      { name: "Wireless Headphones", price: 350000, quantity: 1 }
+    ],
+    subtotal: 350000,
+    tax: 35000,
+    status: "pending"
+  })
+  .send(jid);
+```
+
+### 4. Zero-Token Universal Meta Cloud API Converter (`fromCloudApiMessage`)
+
+Got a JSON payload from the official [Meta WhatsApp Business API Documentation](https://developers.facebook.com/documentation/business-messaging/whatsapp/get-started)? Simply pass it to `fromCloudApiMessage()` to send it instantly via Baileys multi-device socket with **zero tokens and zero keys**:
+
+```typescript
+import { fromCloudApiMessage } from "baileys-rec";
+
+// Copy-paste straight from Meta docs:
+const metaPayload = {
+  messaging_product: "whatsapp",
+  recipient_type: "individual",
+  to: "628123456789",
+  type: "interactive",
+  interactive: {
+    type: "product",
+    body: { text: "Exclusive drop!" },
+    action: {
+      catalog_id: "MY_CATALOG",
+      product_retailer_id: "ITEM_99"
+    }
+  }
+};
+
+// Converts to 100% pure Proto format:
+const baileysMessage = fromCloudApiMessage(metaPayload);
+await sock.sendMessage(jid, baileysMessage);
+```
 
 ## 📑 Comprehensive Table of Contents
 

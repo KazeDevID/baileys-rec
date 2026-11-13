@@ -30,6 +30,19 @@ export declare class ButtonBuilder {
     addCopy(text: string, code: string, icon?: string): this;
     addList(title: string, sections: Array<{ title: string; rows: Array<{ id: string; title: string; description?: string }> }>, icon?: string): this;
     addFlow(flowId: string, text: string, flowToken?: string, action?: string, payload?: object): this;
+    addLocation(text?: string, icon?: string): this;
+    addWebview(text: string, url: string, title?: string, icon?: string): this;
+    addPayment(text: string, paymentConfig?: object, icon?: string): this;
+    addOrder(text: string, orderConfig?: object, icon?: string): this;
+    addCallPermission(text?: string, icon?: string): this;
+    addReminder(text: string, title?: string, timestampOrDate?: any, icon?: string): this;
+    addCancelReminder(text: string, reminderId?: string, icon?: string): this;
+    addProduct(productRetailerId: string, catalogId: string, text?: string, icon?: string): this;
+    addProductList(catalogId: string, sections: any[], text?: string, icon?: string): this;
+    addCatalog(businessOwnerJid?: string, text?: string, icon?: string): this;
+    addAddressRequest(text?: string, addressType?: string, parameters?: object, icon?: string): this;
+    addPixPayment(amount: number | object, pixKey: string, merchantName?: string, text?: string, icon?: string): this;
+    addPaymentStatus(referenceId: string, status?: string, paymentConfig?: object, text?: string, icon?: string): this;
     build(): NativeFlowButton[];
 }
 

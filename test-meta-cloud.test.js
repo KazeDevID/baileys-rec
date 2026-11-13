@@ -276,3 +276,187 @@ test('serializeMessage accurately extracts interactive clicks, flows, and event 
     const parsedRsvp = serializeMessage(rawEventRsvp);
     assert.equal(parsedRsvp.eventRsvp?.status, "GOING");
 });
+
+
+test("fromCloudApiMessage converts single product and product_list to pure proto nativeFlow", () => {
+    // 1. Single Product
+    const singleProdPayload = {
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: "6281234567890",
+        type: "interactive",
+        interactive: {
+            type: "product",
+            body: { text: "Check out our newest sneakers!" },
+            action: {
+                catalog_id: "CAT_001",
+                product_retailer_id: "NIKE_AIR_MAX"
+            }
+        }
+    };
+    const baileysSingle = fromCloudApiMessage(singleProdPayload);
+    assert.equal(baileysSingle.text, "Check out our newest sneakers!");
+    assert.equal(baileysSingle.nativeFlow?.[0]?.name, "single_product");
+    assert.equal(baileysSingle.nativeFlow?.[0]?.product_retailer_id, "NIKE_AIR_MAX");
+    assert.equal(baileysSingle.nativeFlow?.[0]?.catalog_id, "CAT_001");
+
+    // 2. Product List
+    const prodListPayload = {
+        messaging_product: "whatsapp",
+        recipient_type: "individual",
+        to: "6281234567890",
+        type: "interactive",
+        interactive: {
+            type: "product_list",
+            body: { text: "Catalog Deals" },
+            action: {
+                catalog_id: "CAT_001",
+                sections: [
+                    {
+                        title: "Footwear",
+                        product_items: [{ product_retailer_id: "SHOE_01" }, { product_retailer_id: "SHOE_02" }]
+                    }
+                ]
+            }
+        }
+    };
+    const baileysList = fromCloudApiMessage(prodListPayload);
+    assert.equal(baileysList.nativeFlow?.[0]?.name, "product_list");
+    assert.equal(baileysList.nativeFlow?.[0]?.catalog_id, "CAT_001");
+    assert.equal(baileysList.nativeFlow?.[0]?.sections?.length, 1);
+});
+
+test("fromCloudApiMessage converts address_message, order_details, and review_and_pay", () => {
+    // 1. Address Message
+    const addrPayload = {
+        messaging_product: "whatsapp",
+        type: "interactive",
+        interactive: {
+            type: "address_message",
+            body: { text: "Please provide shipping address" },
+            action: {
+                name: "address_message",
+                parameters: {
+                    country: "ID",
+                    values: { city: "Jakarta" }
+                }
+            }
+        }
+    };
+    const baileysAddr = fromCloudApiMessage(addrPayload);
+    assert.equal(baileysAddr.nativeFlow?.[0]?.name, "address_message");
+    assert.equal(baileysAddr.nativeFlow?.[0]?.address?.country, "ID");
+
+    // 2. Order Details
+    const orderPayload = {
+        messaging_product: "whatsapp",
+        type: "interactive",
+        interactive: {
+            type: "order_details",
+            body: { text: "Review your cart" },
+            action: {
+                name: "review_order",
+                parameters: {
+                    order: {
+                        order_id: "ORD_999",
+                        items: [{ name: "Hoodie", price: 250000 }],
+                        subtotal: 250000
+                    }
+                }
+            }
+        }
+    };
+    const baileysOrder = fromCloudApiMessage(orderPayload);
+    assert.equal(baileysOrder.nativeFlow?.[0]?.name, "review_order");
+    assert.equal(baileysOrder.nativeFlow?.[0]?.order?.order_id, "ORD_999");
+});
+
+test("fromCloudApiMessage converts poll, event, reaction, audio PTT, and sticker", () => {
+    // 1. Poll
+    const pollPayload = {
+        messaging_product: "whatsapp",
+        type: "poll",
+        poll: {
+            question: "Choose your favorite stack?",
+            options: ["Next.js", "Express + Baileys", "FastAPI"],
+            selectable_count: 1
+        }
+    };
+    const baileysPoll = fromCloudApiMessage(pollPayload);
+    assert.equal(baileysPoll.poll?.name, "Choose your favorite stack?");
+    assert.equal(baileysPoll.poll?.values?.length, 3);
+    assert.equal(baileysPoll.poll?.selectableCount, 1);
+
+    // 2. Reaction
+    const reactPayload = {
+        messaging_product: "whatsapp",
+        type: "reaction",
+        reaction: {
+            message_id: "MSG_XYZ",
+            emoji: "⚡"
+        }
+    };
+    const baileysReact = fromCloudApiMessage(reactPayload);
+    assert.equal(baileysReact.react?.text, "⚡");
+    assert.equal(baileysReact.react?.key?.id, "MSG_XYZ");
+
+    // 3. Audio with PTT
+    const audioPayload = {
+        messaging_product: "whatsapp",
+        type: "audio",
+        audio: {
+            link: "https://example.com/voice.ogg",
+            ptt: true
+        }
+    };
+    const baileysAudio = fromCloudApiMessage(audioPayload);
+    assert.equal(baileysAudio.ptt, true);
+    assert.equal(baileysAudio.audio?.url, "https://example.com/voice.ogg");
+});
+
+test("ButtonBuilder and Button class fluent methods generate valid proto buttons", () => {
+    const builder = new ButtonBuilder()
+        .addProduct("ITEM_100", "CAT_500", "View Sneaker")
+        .addProductList("CAT_500", [{ title: "Popular", product_items: [] }])
+        .addCatalog("628123456789@s.whatsapp.net", "Open Store")
+        .addAddressRequest("Input Address", "shipping")
+        .addPixPayment(50000, "pix@bank.com", "My Shop")
+        .addPaymentStatus("REF_123", "success", { amount: { value: 50000, offset: 100 } });
+
+    const buttons = builder.build();
+    assert.equal(buttons.length, 6);
+    assert.equal(buttons[0].name, "single_product");
+    assert.equal(buttons[1].name, "product_list");
+    assert.equal(buttons[2].name, "open_catalog");
+    assert.equal(buttons[3].name, "address_message");
+    assert.equal(buttons[4].name, "review_and_pay");
+    assert.equal(buttons[5].name, "payment_status_update");
+});
+
+test("generateWAMessageContent produces valid WAProto nativeFlowMessage for single_product and product_list", async () => {
+    const content = await generateWAMessageContent({
+        text: "Product showcase",
+        nativeFlow: [
+            {
+                name: "single_product",
+                product_retailer_id: "SHOE_99",
+                catalog_id: "CAT_99"
+            },
+            {
+                name: "product_list",
+                catalog_id: "CAT_99",
+                sections: [{ title: "Sale", product_items: [] }]
+            }
+        ]
+    }, {});
+
+    const inner = content.viewOnceMessage?.message?.interactiveMessage || content.interactiveMessage;
+    assert.ok(inner, "interactiveMessage must exist");
+    const nativeFlow = inner.nativeFlowMessage;
+    assert.ok(nativeFlow, "nativeFlowMessage must exist");
+    assert.equal(nativeFlow.buttons.length, 2);
+    assert.equal(nativeFlow.buttons[0].name, "single_product");
+    const params0 = JSON.parse(nativeFlow.buttons[0].buttonParamsJson);
+    assert.equal(params0.product_retailer_id, "SHOE_99");
+    assert.equal(nativeFlow.buttons[1].name, "product_list");
+});
