@@ -1,7 +1,7 @@
 {
   "name": "baileys-rec",
   "type": "module",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "WhatsApp Web & Multi-Device API library with Pure Proto Meta Cloud API Parity (Templates, Flow v3 Builder, Carousel Cards, Catalog, OTP Copy Code, Voice Waveforms, Newsletter Channels, Pix & Orders) - Zero Tokens Required",
   "keywords": [
     "whatsapp",
