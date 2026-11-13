@@ -38,6 +38,8 @@ export declare class ButtonBuilder {
     addReminder(text: string, title?: string, timestampOrDate?: any, icon?: string): this;
     addCancelReminder(text: string, reminderId?: string, icon?: string): this;
     addProduct(productRetailerId: string, catalogId: string, text?: string, icon?: string): this;
+    addOtp(code: string | number, text?: string): this;
+    addOrderStatus(referenceId: string, status?: string, description?: string, text?: string, icon?: string): this;
     addProductList(catalogId: string, sections: any[], text?: string, icon?: string): this;
     addCatalog(businessOwnerJid?: string, text?: string, icon?: string): this;
     addAddressRequest(text?: string, addressType?: string, parameters?: object, icon?: string): this;
@@ -142,3 +144,31 @@ export declare function createMetaCloudApiClient(config: { phoneNumberId: string
 export declare function sendCloudApiMessage(sock: any, jid: string, content: any, options?: any): Promise<any>;
 
 export declare function serializeMessage(msg: any): any;
+
+export declare function generateWaveform(samples?: number, options?: { min?: number; max?: number; variance?: number }): Uint8Array;
+
+export declare class FlowBuilder {
+    flowId: string;
+    title: string;
+    version: string;
+    screens: any[];
+    constructor(flowId?: string, title?: string);
+    addScreen(screenId: string, title?: string, options?: any): this;
+    addTextInput(name: string, label: string, options?: any): this;
+    addDropdown(name: string, label: string, items?: any[], options?: any): this;
+    addRadioButtons(name: string, label: string, items?: any[], options?: any): this;
+    addCheckboxGroup(name: string, label: string, items?: any[], options?: any): this;
+    addFooter(label?: string, action?: string, payload?: object): this;
+    buildJSON(): { version: string; screens: any[] };
+    toFlowButton(displayText?: string, token?: string): { name: string; buttonParamsJson: string };
+}
+
+export declare class NewsletterHelper {
+    static isNewsletterJid(jid: string): boolean;
+    static buildNewsletterMessage(text: string, options?: any): any;
+    static follow(sock: any, newsletterJid: string): Promise<any>;
+    static unfollow(sock: any, newsletterJid: string): Promise<any>;
+    static mute(sock: any, newsletterJid: string): Promise<any>;
+    static unmute(sock: any, newsletterJid: string): Promise<any>;
+    static getMetadata(sock: any, newsletterJid: string): Promise<any>;
+}

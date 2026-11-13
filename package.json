@@ -1,8 +1,8 @@
 {
   "name": "baileys-rec",
   "type": "module",
-  "version": "1.5.0",
-  "description": "WhatsApp Web API library for Node.js with Native Flow Interactive Buttons, Single & Multi Product Catalog, Flow Forms v3, Address & Order Details, Pix Payments, Reminders, Fluent Builders (Button, Carousel, AIRich), Meta GenAI Rich Responses, and Pure Proto WhatsApp Cloud API adapter (no tokens or keys required)",
+  "version": "1.6.1",
+  "description": "WhatsApp Web & Multi-Device API library with Pure Proto Meta Cloud API Parity (Templates, Flow v3 Builder, Carousel Cards, Catalog, OTP Copy Code, Voice Waveforms, Newsletter Channels, Pix & Orders) - Zero Tokens Required",
   "keywords": [
     "whatsapp",
     "baileys",
@@ -13,7 +13,12 @@
     "cloud-api",
     "meta-cloud-api",
     "rich-messages",
-    "whatsapp-bot"
+    "whatsapp-bot",
+    "whatsapp-flows",
+    "meta-templates",
+    "otp-copy-code",
+    "voice-waveforms",
+    "newsletter-channels"
   ],
   "homepage": "https://github.com/KazeDevID/baileys-rec#readme",
   "repository": {
