@@ -1,3 +1,71 @@
+# 🚀 baileys-rec (v1.7.0)
+
+> **v1.7.0 Update — Sound Stickers & Private/Group Chat Themes:**
+> Full `WAProto` & socket support for **WhatsApp Sound Stickers** (stickers with embedded audio tracks via `audioStickerMessage` / `StickerMessage.audioMessage`) and **Private & Group Chat Themes** (`CHAT_THEME_SETTING` protocol messages with preset palettes, custom ARGB/Hex colors, doodle toggles, and wallpapers).
+
+## 🆕 What is New in v1.7.0
+
+### 1. 🔊 Sound Stickers (Stickers with Audio)
+Send and receive stickers with embedded Opus audio tracks:
+
+```js
+// Method A: Using sock.sendSoundSticker helper
+await sock.sendSoundSticker(jid, stickerBuffer, audioBuffer, {
+  isAnimated: true,
+  accessibilityLabel: "Meow Sticker",
+  emojis: ["🐱", "🎵"]
+});
+
+// Method B: Using sock.sendMessage directly
+await sock.sendMessage(jid, {
+  soundSticker: {
+    sticker: { url: "./sticker.webp" },
+    audio: { url: "./sound.ogg" },
+    isAnimated: true,
+    accessibilityLabel: "Funny Laugh"
+  }
+});
+
+// Method C: Shorthand sticker + audio
+await sock.sendMessage(jid, {
+  sticker: stickerBuffer,
+  audio: audioBuffer
+});
+
+// Extract & download audio track from an incoming sound sticker
+import { downloadSoundStickerAudio } from "baileys-rec";
+const audioBuf = await downloadSoundStickerAudio(msg, "buffer");
+```
+
+### 2. 🎨 Chat Themes (Private & Group Chats)
+Customize or reset chat themes for both private (`@s.whatsapp.net` / `@lid`) and group (`@g.us`) conversations:
+
+```js
+// Apply a built-in preset theme (EMERALD, OCEAN, MIDNIGHT, LAVENDER, ROSE, SUNSET, CYBERPUNK, AMBER, FOREST, SAKURA, INDIGO, MONOCHROME, DEFAULT)
+await sock.setChatTheme(jid, "EMERALD");
+
+// Apply custom hex colors & doodle toggle
+await sock.setChatTheme(jid, {
+  colorSchemeId: "CUSTOM_NEON",
+  backgroundColor: "#00F0FF",
+  darkColor: "#003366",
+  isDoodleEnabled: true
+});
+
+// Using sock.sendMessage
+await sock.sendMessage(jid, { chatTheme: "LAVENDER" });
+
+// Reset/clear chat theme back to default
+await sock.clearChatTheme(jid);
+
+// Listen for incoming theme changes
+sock.ev.on("chat.theme.update", ({ chatId, sender, theme }) => {
+  console.log("Chat theme updated:", chatId, theme);
+});
+```
+
+---
+
 # 🚀 baileys-rec (v1.6.0)
 
 > **The Next-Generation WhatsApp Multi-Device & Meta Cloud API Library for Node.js.**

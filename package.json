@@ -1,8 +1,8 @@
 {
   "name": "baileys-rec",
   "type": "module",
-  "version": "1.6.1",
-  "description": "WhatsApp Web & Multi-Device API library with Pure Proto Meta Cloud API Parity (Templates, Flow v3 Builder, Carousel Cards, Catalog, OTP Copy Code, Voice Waveforms, Newsletter Channels, Pix & Orders) - Zero Tokens Required",
+  "version": "1.7.0",
+  "description": "WhatsApp Web & Multi-Device API library with Sound Stickers (Audio Stickers), Private & Group Chat Themes, and Pure Proto Meta Cloud API Parity",
   "keywords": [
     "whatsapp",
     "baileys",
@@ -18,7 +18,9 @@
     "meta-templates",
     "otp-copy-code",
     "voice-waveforms",
-    "newsletter-channels"
+    "newsletter-channels",
+    "sound-stickers",
+    "chat-themes"
   ],
   "homepage": "https://github.com/KazeDevID/baileys-rec#readme",
   "repository": {
@@ -35,7 +37,7 @@
     "engine-requirements.js"
   ],
   "scripts": {
-    "test": "node --test test-meta-cloud.test.js test-helpers.test.js"
+    "test": "node --test test-meta-cloud.test.js test-helpers.test.js test-sound-stickers.test.js test-chat-theme.test.js"
   },
   "dependencies": {
     "@cacheable/node-cache": "^1.4.0",
