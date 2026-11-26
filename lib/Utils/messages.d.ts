@@ -20,6 +20,7 @@ export function getAggregateResponsesInEventMessage({ eventResponses }: {
 export function extractUrlFromText(text: any): any;
 export function generateLinkPreviewIfRequired(text: any, getUrlInfo: any, logger: any): Promise<any>;
 export function prepareWAMessageMedia(message: any, options: any): Promise<proto.Message>;
+export function prepareSoundStickerMessage(message: any, options: any): Promise<proto.Message>;
 export function prepareDisappearingMessageSettingContent(ephemeralExpiration: any): proto.Message;
 export function generateForwardMessageContent(message: any, forceForward: any): any;
 export function hasNonNullishProperty(message: any, key: any): boolean;
@@ -44,3 +45,5 @@ export function downloadMediaMessage(message: any, type: any, options: any, ctx:
 export function assertMediaContent(content: any): any;
 export function shouldIncludeBizBinaryNode(message: any): boolean;
 import { proto } from '../../WAProto/index.js';
+
+export function downloadSoundStickerAudio(message: any, type?: "buffer" | "stream", options?: any, ctx?: any): Promise<any>;
