@@ -11,3 +11,5 @@ export default makeWASocket;
 import makeWASocket from './Socket/index.js';
 
 export { Button, ButtonV2, Carousel, AIRich, Rich, Toolkit, extractIE, tokenizeCode, tokenizeCodeV2, generateTableContent, generateTableContentV2, generateCodeBlockContent, generateCodeBlockContentV2, generateLinkContent, generateLinkContentV2, generateLatexContent, sanitizeQuotedMessage } from './Utils/helpers.js';
+
+export { CHAT_THEME_PRESETS, hexToArgb, resolveChatThemeSetting, formatChatThemeProtocolMessage } from "./Utils/chat-theme-utils.js";
