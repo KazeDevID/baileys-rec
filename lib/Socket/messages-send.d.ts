@@ -33,6 +33,10 @@ export function makeMessagesSocket(config: any): {
     }>;
     getUSyncDevices: (jids: any, useCache: any, ignoreZeroDevices: any) => Promise<any[]>;
     messageRetryManager: MessageRetryManager | null;
+    setChatTheme: (jid: string, theme: any, options?: any) => Promise<any>;
+    clearChatTheme: (jid: string, options?: any) => Promise<any>;
+    getChatThemePresets: () => any;
+    sendSoundSticker: (jid: string, sticker: any, audio: any, options?: any) => Promise<any>;
     updateMemberLabel: (jid: any, memberLabel: any) => Promise<any>;
     updateMediaMessage: (message: any) => Promise<any>;
     sendMessage: (jid: any, content: any, options?: {}) => Promise<proto.WebMessageInfo | undefined>;

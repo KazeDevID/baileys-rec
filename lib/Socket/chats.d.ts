@@ -85,6 +85,10 @@ export function makeChatsSocket(config: any): {
     star: (jid: any, messages: any, star: any) => Promise<void>;
     addOrEditQuickReply: (quickReply: any) => Promise<void>;
     removeQuickReply: (timestamp: any) => Promise<void>;
+    setChatTheme: (jid: string, theme: any, options?: any) => Promise<any>;
+    clearChatTheme: (jid: string, options?: any) => Promise<any>;
+    getChatThemePresets: () => any;
+    sendSoundSticker: (jid: string, sticker: any, audio: any, options?: any) => Promise<any>;
     type: string;
     ws: import("./Client/websocket.js").WebSocketClient;
     ev: {
